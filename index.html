@@ -12,7 +12,6 @@
       --frame-h: 720px;
       font-family: Inter, system-ui, -apple-system, "Segoe UI", Roboto, Arial;
     }
-
     body {
       margin: 0;
       min-height: 100vh;
@@ -22,7 +21,6 @@
       background: linear-gradient(180deg,#0f172a 0%, #071029 100%);
       color: #fff;
     }
-
     .phone {
       width: var(--frame-w);
       height: var(--frame-h);
@@ -32,7 +30,6 @@
       border: 1px solid rgba(255,255,255,0.08);
       background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
     }
-
     .phone video.bg {
       position:absolute;
       inset:0;
@@ -41,12 +38,10 @@
       object-fit:cover;
       z-index:0;
     }
-
     .phone .back-overlay {
       position:absolute; inset:0; z-index:1;
       background: linear-gradient(180deg, rgba(0,0,0,0.18) 0%, rgba(0,0,0,0.4) 70%);
     }
-
     /* Bottom Home Content */
     .content-bottom {
       position:absolute;
@@ -59,7 +54,6 @@
       font-size:14px;
       display: none; /* hidden until install */
     }
-
     /* Fullscreen Install Overlay */
     .install-overlay {
       position: absolute;
@@ -140,44 +134,49 @@
     const installOverlay = document.getElementById('installOverlay');
     const installBtn = document.getElementById('installBtn');
     const homeContent = document.getElementById('homeContent');
-
     let deferredPrompt;
 
-    // Hide overlay if already installed before
-    if(localStorage.getItem("appInstalled") === "true"){
-      installOverlay.style.display = "none";
-      homeContent.style.display = "block";
+    // Detect standalone mode (means app is installed)
+    function isStandalone() {
+      return window.matchMedia('(display-mode: standalone)').matches 
+          || window.navigator.standalone === true;
     }
 
+    function showCorrectUI() {
+      if (isStandalone()) {
+        installOverlay.style.display = "none";
+        homeContent.style.display = "block";
+      } else {
+        homeContent.style.display = "none";
+        installOverlay.style.display = "flex";
+      }
+    }
+
+    // Listen for install prompt
     window.addEventListener('beforeinstallprompt', (e) => {
       e.preventDefault();
       deferredPrompt = e;
-      if(localStorage.getItem("appInstalled") !== "true"){
-        installOverlay.style.display = "flex";
-      }
+      showCorrectUI();
     });
 
+    // Install button click
     installBtn.addEventListener('click', () => {
       if (deferredPrompt) {
         deferredPrompt.prompt();
         deferredPrompt.userChoice.then(choice => {
           if (choice.outcome === 'accepted') {
             console.log('User installed app');
-            localStorage.setItem("appInstalled", "true");
-            installOverlay.style.display = "none";
-            homeContent.style.display = "block"; // show home after install
           } else {
             console.log('User dismissed install');
           }
           deferredPrompt = null;
+          showCorrectUI();
         });
-      } else {
-        // fallback if no PWA support
-        localStorage.setItem("appInstalled", "true");
-        installOverlay.style.display = "none";
-        homeContent.style.display = "block";
       }
     });
+
+    // Run on load
+    showCorrectUI();
 
     // Service Worker register
     if ('serviceWorker' in navigator) {

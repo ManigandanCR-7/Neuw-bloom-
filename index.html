@@ -116,7 +116,7 @@
 
     <!-- background music (hidden until installed) -->
     <audio id="bgMusic" loop>
-      <source src="Sound of a mountain river and the singing of birds. 10 minutes for meditation and relaxation..mp3" type="audio/mp3" />
+      <source src="music.mp3" type="audio/mp3" />
     </audio>
 
     <!-- bottom content (home screen) -->
@@ -169,6 +169,15 @@
     return /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
   }
 
+  function showHome() {
+    homeContent.style.display = "block";
+    try {
+      bgMusic.play().catch(err => console.log("Autoplay blocked:", err));
+    } catch (err) {
+      console.log("Music error:", err);
+    }
+  }
+
   function showCorrectUI() {
     if (!isMobile()) {
       desktopOverlay.style.display = "flex";
@@ -182,8 +191,7 @@
     if (isStandalone()) {
       installOverlay.style.display = "none";
       successOverlay.style.display = "none";
-      homeContent.style.display = "block";
-      bgMusic.play().catch(err => console.log("Autoplay blocked:", err));
+      showHome();
     } else {
       homeContent.style.display = "none";
       installOverlay.style.display = "flex";
@@ -207,7 +215,7 @@
           // Show success for 20s then switch to home
           setTimeout(() => {
             successOverlay.style.display = "none";
-            showCorrectUI();
+            showHome();
           }, 20000); 
         }
         deferredPrompt = null;

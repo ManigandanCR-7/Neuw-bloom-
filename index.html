@@ -100,6 +100,29 @@
     .overlay-card button:hover {
       background: rgba(255,255,255,0.25);
     }
+    /* Music Toggle Button */
+    .music-toggle {
+      position: absolute;
+      top: 14px;
+      right: 14px;
+      z-index: 6;
+      width: 42px;
+      height: 42px;
+      border-radius: 50%;
+      border: 1px solid rgba(255,255,255,0.25);
+      background: rgba(255,255,255,0.1);
+      backdrop-filter: blur(12px) saturate(150%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      font-size: 18px;
+      transition: 0.3s ease;
+      display: none; /* hidden until home */
+    }
+    .music-toggle:hover {
+      background: rgba(255,255,255,0.2);
+    }
     @keyframes fadeIn {
       from { opacity: 0; transform: scale(0.9); }
       to { opacity: 1; transform: scale(1); }
@@ -114,7 +137,7 @@
     </video>
     <div class="back-overlay"></div>
 
-    <!-- background music (hidden until installed) -->
+    <!-- background music -->
     <audio id="bgMusic" loop>
       <source src="music.mp3" type="audio/mp3" />
     </audio>
@@ -124,6 +147,9 @@
       <div style="font-weight:600; font-size:16px;">Neuw-Bloom</div>
       <div style="opacity:0.85; font-size:12px; margin-top:6px;">Nature-infused brain companion</div>
     </div>
+
+    <!-- Music Toggle Button -->
+    <div class="music-toggle" id="musicToggle">🔇</div>
 
     <!-- Install Overlay (Step 1) -->
     <div class="overlay" id="installOverlay">
@@ -158,7 +184,9 @@
   const installBtn = document.getElementById('installBtn');
   const bgMusic = document.getElementById('bgMusic');
   const desktopOverlay = document.getElementById('desktopOverlay');
+  const musicToggle = document.getElementById('musicToggle');
   let deferredPrompt;
+  let musicOn = false;
 
   function isStandalone() {
     return window.matchMedia('(display-mode: standalone)').matches 
@@ -171,11 +199,7 @@
 
   function showHome() {
     homeContent.style.display = "block";
-    try {
-      bgMusic.play().catch(err => console.log("Autoplay blocked:", err));
-    } catch (err) {
-      console.log("Music error:", err);
-    }
+    musicToggle.style.display = "flex";
   }
 
   function showCorrectUI() {
@@ -184,6 +208,7 @@
       installOverlay.style.display = "none";
       successOverlay.style.display = "none";
       homeContent.style.display = "none";
+      musicToggle.style.display = "none";
       return;
     }
     desktopOverlay.style.display = "none";
@@ -220,6 +245,20 @@
         }
         deferredPrompt = null;
       });
+    }
+  });
+
+  // Music toggle logic
+  musicToggle.addEventListener('click', () => {
+    if (!musicOn) {
+      bgMusic.play().then(() => {
+        musicOn = true;
+        musicToggle.textContent = "🎵";
+      }).catch(err => console.log("Play error:", err));
+    } else {
+      bgMusic.pause();
+      musicOn = false;
+      musicToggle.textContent = "🔇";
     }
   });
 

@@ -114,6 +114,11 @@
     </video>
     <div class="back-overlay"></div>
 
+    <!-- background music (hidden until installed) -->
+    <audio id="bgMusic" loop>
+      <source src="Sound of a mountain river and the singing of birds. 10 minutes for meditation and relaxation..mp3" type="audio/mp3" />
+    </audio>
+
     <!-- bottom content (home screen) -->
     <div class="content-bottom" id="homeContent">
       <div style="font-weight:600; font-size:16px;">Neuw-Bloom</div>
@@ -136,13 +141,23 @@
         <p>Check your home screen — Neuw-Bloom is ready!</p>
       </div>
     </div>
+
+    <!-- Desktop Only Overlay -->
+    <div class="overlay" id="desktopOverlay" style="display:none;">
+      <div class="overlay-card">
+        <h4>Mobile Only</h4>
+        <p>You can view our app only on your mobile. <br/> Kindly visit this link through your phone.</p>
+      </div>
+    </div>
   </div>
 
- <script>
+<script>
   const installOverlay = document.getElementById('installOverlay');
   const successOverlay = document.getElementById('successOverlay');
   const homeContent = document.getElementById('homeContent');
   const installBtn = document.getElementById('installBtn');
+  const bgMusic = document.getElementById('bgMusic');
+  const desktopOverlay = document.getElementById('desktopOverlay');
   let deferredPrompt;
 
   function isStandalone() {
@@ -150,11 +165,25 @@
         || window.navigator.standalone === true;
   }
 
+  function isMobile() {
+    return /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+  }
+
   function showCorrectUI() {
+    if (!isMobile()) {
+      desktopOverlay.style.display = "flex";
+      installOverlay.style.display = "none";
+      successOverlay.style.display = "none";
+      homeContent.style.display = "none";
+      return;
+    }
+    desktopOverlay.style.display = "none";
+
     if (isStandalone()) {
       installOverlay.style.display = "none";
       successOverlay.style.display = "none";
       homeContent.style.display = "block";
+      bgMusic.play().catch(err => console.log("Autoplay blocked:", err));
     } else {
       homeContent.style.display = "none";
       installOverlay.style.display = "flex";
@@ -175,7 +204,7 @@
           installOverlay.style.display = "none";
           successOverlay.style.display = "flex";
           
-          // ⏳ Keep success overlay for 20 seconds before hiding
+          // Show success for 20s then switch to home
           setTimeout(() => {
             successOverlay.style.display = "none";
             showCorrectUI();

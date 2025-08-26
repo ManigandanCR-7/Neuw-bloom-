@@ -137,60 +137,62 @@
       </div>
     </div>
   </div>
+<script>
+  const installOverlay = document.getElementById('installOverlay');
+  const successOverlay = document.getElementById('successOverlay');
+  const homeContent = document.getElementById('homeContent');
+  const installBtn = document.getElementById('installBtn');
+  let deferredPrompt;
 
-  <script>
-    const installOverlay = document.getElementById('installOverlay');
-    const successOverlay = document.getElementById('successOverlay');
-    const homeContent = document.getElementById('homeContent');
-    const installBtn = document.getElementById('installBtn');
-    let deferredPrompt;
+  function isStandalone() {
+    return window.matchMedia('(display-mode: standalone)').matches 
+        || window.navigator.standalone === true;
+  }
 
-    function isStandalone() {
-      return window.matchMedia('(display-mode: standalone)').matches 
-          || window.navigator.standalone === true;
+  function showCorrectUI() {
+    if (isStandalone()) {
+      installOverlay.style.display = "none";
+      successOverlay.style.display = "none";
+      homeContent.style.display = "block";
+    } else {
+      homeContent.style.display = "none";
+      installOverlay.style.display = "flex";
     }
+  }
 
-    function showCorrectUI() {
-      if (isStandalone()) {
-        installOverlay.style.display = "none";
-        successOverlay.style.display = "none";
-        homeContent.style.display = "block";
-      } else {
-        homeContent.style.display = "none";
-        installOverlay.style.display = "flex";
-      }
-    }
-
-    window.addEventListener('beforeinstallprompt', (e) => {
-      e.preventDefault();
-      deferredPrompt = e;
-      showCorrectUI();
-    });
-
-    installBtn.addEventListener('click', () => {
-      if (deferredPrompt) {
-        deferredPrompt.prompt();
-        deferredPrompt.userChoice.then(choice => {
-          if (choice.outcome === 'accepted') {
-            installOverlay.style.display = "none";
-            successOverlay.style.display = "flex";
-            setTimeout(() => {
-              successOverlay.style.display = "none";
-              showCorrectUI();
-            }, 3000); // show success for 3s
-          }
-          deferredPrompt = null;
-        });
-      }
-    });
-
+  window.addEventListener('beforeinstallprompt', (e) => {
+    e.preventDefault();
+    deferredPrompt = e;
     showCorrectUI();
+  });
 
-    if ('serviceWorker' in navigator) {
-      navigator.serviceWorker.register('sw.js').then(() => {
-        console.log('Service Worker registered');
+  installBtn.addEventListener('click', () => {
+    if (deferredPrompt) {
+      deferredPrompt.prompt();
+      deferredPrompt.userChoice.then(choice => {
+        if (choice.outcome === 'accepted') {
+          installOverlay.style.display = "none";
+          successOverlay.style.display = "flex";
+          
+          // ⏳ Keep success overlay for 20 seconds before hiding
+          setTimeout(() => {
+            successOverlay.style.display = "none";
+            showCorrectUI();
+          }, 20000); 
+        }
+        deferredPrompt = null;
       });
     }
-  </script>
+  });
+
+  showCorrectUI();
+
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('sw.js').then(() => {
+      console.log('Service Worker registered');
+    });
+  }
+</script>
+
 </body>
 </html>

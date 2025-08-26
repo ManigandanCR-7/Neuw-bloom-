@@ -52,10 +52,10 @@
       text-align:center;
       color: rgba(255,255,255,0.95);
       font-size:14px;
-      display: none; /* hidden until install */
+      display: none; /* hidden until installed */
     }
-    /* Fullscreen Install Overlay */
-    .install-overlay {
+    /* Fullscreen Overlay Base */
+    .overlay {
       position: absolute;
       inset: 0;
       backdrop-filter: blur(20px) saturate(180%);
@@ -65,7 +65,7 @@
       align-items: center;
       z-index: 20;
     }
-    .install-card {
+    .overlay-card {
       background: rgba(255,255,255,0.1);
       backdrop-filter: blur(16px) saturate(160%);
       border: 1px solid rgba(255,255,255,0.25);
@@ -76,17 +76,17 @@
       box-shadow: 0 8px 30px rgba(0,0,0,0.4);
       animation: fadeIn 0.5s ease;
     }
-    .install-card h4 {
+    .overlay-card h4 {
       margin: 0 0 10px;
       font-size: 18px;
       font-weight: 600;
     }
-    .install-card p {
+    .overlay-card p {
       margin: 0 0 16px;
       font-size: 13px;
       opacity: 0.9;
     }
-    .install-card button {
+    .overlay-card button {
       border: 1px solid rgba(255,255,255,0.3);
       background: rgba(255,255,255,0.15);
       backdrop-filter: blur(10px);
@@ -97,7 +97,7 @@
       cursor: pointer;
       transition: 0.3s;
     }
-    .install-card button:hover {
+    .overlay-card button:hover {
       background: rgba(255,255,255,0.25);
     }
     @keyframes fadeIn {
@@ -120,23 +120,31 @@
       <div style="opacity:0.85; font-size:12px; margin-top:6px;">Nature-infused brain companion</div>
     </div>
 
-    <!-- Install Overlay -->
-    <div class="install-overlay" id="installOverlay">
-      <div class="install-card">
+    <!-- Install Overlay (Step 1) -->
+    <div class="overlay" id="installOverlay">
+      <div class="overlay-card">
         <h4>Install Neuw-Bloom</h4>
         <p>Experience seamless access from your home screen.</p>
         <button id="installBtn">Install App</button>
+      </div>
+    </div>
+
+    <!-- Success Overlay (Step 2) -->
+    <div class="overlay" id="successOverlay" style="display:none;">
+      <div class="overlay-card">
+        <h4>🎉 Installed</h4>
+        <p>Check your home screen — Neuw-Bloom is ready!</p>
       </div>
     </div>
   </div>
 
   <script>
     const installOverlay = document.getElementById('installOverlay');
-    const installBtn = document.getElementById('installBtn');
+    const successOverlay = document.getElementById('successOverlay');
     const homeContent = document.getElementById('homeContent');
+    const installBtn = document.getElementById('installBtn');
     let deferredPrompt;
 
-    // Detect standalone mode (means app is installed)
     function isStandalone() {
       return window.matchMedia('(display-mode: standalone)').matches 
           || window.navigator.standalone === true;
@@ -145,6 +153,7 @@
     function showCorrectUI() {
       if (isStandalone()) {
         installOverlay.style.display = "none";
+        successOverlay.style.display = "none";
         homeContent.style.display = "block";
       } else {
         homeContent.style.display = "none";
@@ -152,33 +161,31 @@
       }
     }
 
-    // Listen for install prompt
     window.addEventListener('beforeinstallprompt', (e) => {
       e.preventDefault();
       deferredPrompt = e;
       showCorrectUI();
     });
 
-    // Install button click
     installBtn.addEventListener('click', () => {
       if (deferredPrompt) {
         deferredPrompt.prompt();
         deferredPrompt.userChoice.then(choice => {
           if (choice.outcome === 'accepted') {
-            console.log('User installed app');
-          } else {
-            console.log('User dismissed install');
+            installOverlay.style.display = "none";
+            successOverlay.style.display = "flex";
+            setTimeout(() => {
+              successOverlay.style.display = "none";
+              showCorrectUI();
+            }, 3000); // show success for 3s
           }
           deferredPrompt = null;
-          showCorrectUI();
         });
       }
     });
 
-    // Run on load
     showCorrectUI();
 
-    // Service Worker register
     if ('serviceWorker' in navigator) {
       navigator.serviceWorker.register('sw.js').then(() => {
         console.log('Service Worker registered');

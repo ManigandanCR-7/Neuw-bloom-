@@ -1,44 +1,39 @@
 <!doctype html>
 <html lang="en">
 <head>
-   <link rel="manifest" href="/manifest.json" />
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Neuw-Bloom Mobile Frame — Demo</title>
+  <title>Neuw-Bloom — PWA Demo</title>
+  <link rel="manifest" href="manifest.json" />
+  <meta name="theme-color" content="#0f172a" />
   <style>
-    :root{
-      --frame-w: 375px;   /* mobile width */
-      --frame-h: 812px;   /* mobile height */
-      --glass-bg: rgba(255,255,255,0.07);
-      --glass-border: rgba(255,255,255,0.18);
-      --accent: rgba(255,180,200,0.12);
+    :root {
+      --frame-w: 375px;
+      --frame-h: 812px;
       --white-85: rgba(255,255,255,0.85);
-      font-family: Inter, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+      font-family: Inter, system-ui, -apple-system, "Segoe UI", Roboto, Arial;
     }
 
-    body{
-      margin:0;
-      min-height:100vh;
-      display:flex;
-      align-items:center;
-      justify-content:center;
+    body {
+      margin: 0;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
       background: linear-gradient(180deg,#0f172a 0%, #071029 100%);
       color: #fff;
     }
 
-    /* Mobile frame container */
     .phone {
       width: var(--frame-w);
       height: var(--frame-h);
       border-radius: 36px;
       overflow: hidden;
-      box-shadow: 0 30px 80px rgba(2,6,23,0.7), inset 0 1px 0 rgba(255,255,255,0.03);
       position: relative;
       border: 1px solid rgba(255,255,255,0.06);
       background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
     }
 
-    /* Background video */
     .phone video.bg {
       position:absolute;
       inset:0;
@@ -46,155 +41,31 @@
       height:100%;
       object-fit:cover;
       z-index:0;
-      filter: saturate(1.05) contrast(1.02) brightness(0.85);
-      transform: scale(1.03);
     }
 
-    /* dim / tint overlay */
     .phone .back-overlay {
       position:absolute; inset:0; z-index:1;
       background: linear-gradient(180deg, rgba(0,0,0,0.18) 0%, rgba(0,0,0,0.4) 70%);
     }
 
-    /* Top status (time + battery) */
     .status {
       position:absolute;
       z-index:10;
-      top: 14px;
-      right: 14px;
+      top:14px;
+      right:14px;
       display:flex;
       gap:10px;
       align-items:center;
       font-size:13px;
       color: var(--white-85);
       backdrop-filter: blur(6px) saturate(140%);
-      -webkit-backdrop-filter: blur(6px) saturate(140%);
       background: rgba(255,255,255,0.03);
       padding: 6px 10px;
       border-radius: 14px;
       border: 1px solid rgba(255,255,255,0.06);
     }
-    .status .time { font-weight:600; letter-spacing:0.4px;}
-    .status .battery {
-      display:flex;
-      align-items:center;
-      gap:8px;
-      font-weight:600;
-    }
-    .battery .bar {
-      width:42px; height:12px;
-      border-radius:3px;
-      border:1px solid rgba(255,255,255,0.14);
-      background: rgba(255,255,255,0.04);
-      position:relative;
-      overflow:hidden;
-    }
-    .battery .bar .level {
-      position:absolute; left:0; top:0; bottom:0;
-      background: linear-gradient(90deg,#7efc78,#40d7ff);
-      width:60%;
-      transition: width 400ms ease;
-    }
-    .battery .tip {
-      width:4px; height:6px; background: rgba(255,255,255,0.08);
-      border-radius:1px;
-      margin-left:4px;
-    }
 
-    /* Slider wrapper (top area) */
-    .slider-wrap {
-      position:absolute;
-      z-index:9;
-      top: 70px;
-      left: 16px;
-      right: 16px;
-      display:block;
-      pointer-events:auto;
-    }
-
-    /* The glass card that holds slider */
-    .glass {
-      width:100%;
-      border-radius: 18px;
-      padding: 10px;
-      box-sizing: border-box;
-      backdrop-filter: blur(14px) saturate(140%);
-      -webkit-backdrop-filter: blur(14px) saturate(140%);
-      background: linear-gradient(180deg, rgba(255,255,255,0.04), rgba(255,255,255,0.02));
-      border: 1px solid var(--glass-border);
-      box-shadow: 0 8px 30px rgba(2,6,23,0.6);
-      overflow:hidden;
-    }
-
-    /* slider inner */
-    .slider {
-      position:relative;
-      width:100%;
-      height: 240px;
-      display:flex;
-      align-items:flex-start;
-      justify-content:center;
-    }
-
-    .slides {
-      display:flex;
-      transition: transform 650ms cubic-bezier(.22,.9,.2,1);
-      width:300%;
-      height:100%;
-    }
-
-    .slide {
-      width: calc(100% / 3);
-      padding: 10px;
-      box-sizing: border-box;
-      display:flex;
-      flex-direction:column;
-      gap:10px;
-      align-items:stretch;
-    }
-
-    .slide .img {
-      height: 140px;
-      border-radius: 12px;
-      overflow: hidden;
-      flex-shrink:0;
-      border: 1px solid rgba(255,255,255,0.06);
-    }
-    .slide .img img {
-      width:100%; height:100%; object-fit: cover; display:block;
-      transform: scale(1.03);
-    }
-
-    .slide .info {
-      padding:6px 2px;
-      text-align:left;
-    }
-    .slide h3 { margin:0; font-size:16px; font-weight:700; color: #fff; }
-    .slide p { margin:6px 0 0 0; font-size:13px; color: rgba(255,255,255,0.9); line-height:1.2; opacity:0.95;}
-
-    /* dots */
-    .dots {
-      display:flex;
-      justify-content:center;
-      gap:8px;
-      margin-top:8px;
-      align-items:center;
-    }
-    .dot {
-      width:8px; height:8px; border-radius:999px;
-      background: rgba(255,255,255,0.3);
-      transition: all 260ms ease;
-    }
-    .dot.active {
-      width:28px;
-      background: linear-gradient(90deg,#ffd1e6,#a3f7ff);
-      height:8px;
-      border-radius: 12px;
-      box-shadow: 0 6px 20px rgba(163,247,255,0.08);
-    }
-
-    /* small UI tweaks for lower area */
-    .phone .content-bottom {
+    .content-bottom {
       position:absolute;
       z-index:8;
       bottom:26px;
@@ -203,88 +74,81 @@
       text-align:center;
       color: rgba(255,255,255,0.95);
       font-size:14px;
-      pointer-events:none;
     }
 
-    /* responsive: center on large screens */
-    @media (min-width:900px){
-      body { background: linear-gradient(180deg,#041226,#07152b); }
+    /* Install Overlay */
+    .install-overlay {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      padding: 20px;
+      backdrop-filter: blur(18px) saturate(160%);
+      background: rgba(255,255,255,0.1);
+      border-top: 1px solid rgba(255,255,255,0.2);
+      box-shadow: 0 -4px 30px rgba(0,0,0,0.2);
+      text-align: center;
+      animation: slideUp 0.5s ease;
+      z-index: 20;
+    }
+    .install-overlay h4 {
+      margin: 0 0 10px;
+      font-size: 16px;
+      font-weight: 600;
+    }
+    .install-overlay p {
+      margin: 0 0 14px;
+      font-size: 13px;
+      opacity: 0.9;
+    }
+    .install-overlay button {
+      background: linear-gradient(90deg,#7efc78,#40d7ff);
+      border: none;
+      color: #000;
+      padding: 10px 18px;
+      border-radius: 20px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+    .install-overlay button:hover {
+      opacity: 0.85;
+    }
+    @keyframes slideUp {
+      from { transform: translateY(100%); opacity: 0; }
+      to { transform: translateY(0); opacity: 1; }
     }
   </style>
 </head>
 <body>
-  <div class="phone" role="main" aria-label="Mobile demo frame">
-    <!-- background video (loop) -->
+  <div class="phone">
+    <!-- background video -->
     <video class="bg" autoplay muted loop playsinline>
-      <!-- Sample fallback video - replace with your own (Pixabay/DB link) -->
       <source src="125314-733046618_small.mp4" type="video/mp4" />
-      Your browser does not support the video element.
     </video>
-
     <div class="back-overlay"></div>
 
-    <!-- status (time + battery) -->
-    <div class="status" id="status">
+    <!-- status -->
+    <div class="status">
       <div class="time" id="time">--:--</div>
-      <div class="battery" title="Battery level">
-        <div class="bar" aria-hidden="true">
-          <div class="level" id="battery-level" style="width:60%"></div>
-        </div>
-        <div class="perc" id="battery-text">60%</div>
-        <div class="tip" aria-hidden="true"></div>
-      </div>
     </div>
 
-    <!-- slider overlay glass -->
-    <div class="slider-wrap" aria-hidden="false">
-      <div class="glass" role="region" aria-label="Intro slider">
-        <div class="slider" id="slider">
-          <div class="slides" id="slides">
-            <!-- Slide 1 -->
-            <div class="slide" data-index="0">
-              <div class="img"><img src="https://picsum.photos/seed/neuw1/800/600" alt="Nature scene 1" /></div>
-              <div class="info">
-                <h3>Neuw-Bloom: Start Fresh</h3>
-                <p>Wake gently. Small morning rituals set your brain for focus and calm.</p>
-              </div>
-            </div>
-
-            <!-- Slide 2 -->
-            <div class="slide" data-index="1">
-              <div class="img"><img src="https://picsum.photos/seed/neuw2/800/600" alt="Nature scene 2" /></div>
-              <div class="info">
-                <h3>Daily Guidance</h3>
-                <p>Short, science-backed actions that lift your mood throughout the day.</p>
-              </div>
-            </div>
-
-            <!-- Slide 3 -->
-            <div class="slide" data-index="2">
-              <div class="img"><img src="https://picsum.photos/seed/neuw3/800/600" alt="Nature scene 3" /></div>
-              <div class="info">
-                <h3>Nightly Calm</h3>
-                <p>Wind down with a gentle routine and sleep that helps your brain restore.</p>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div class="dots" id="dots" role="tablist" aria-label="Slide navigation">
-          <div class="dot" data-dot="0" role="tab" aria-selected="true" tabindex="0"></div>
-          <div class="dot" data-dot="1" role="tab" aria-selected="false" tabindex="0"></div>
-          <div class="dot" data-dot="2" role="tab" aria-selected="false" tabindex="0"></div>
-        </div>
-      </div>
-    </div>
-
+    <!-- bottom content -->
     <div class="content-bottom">
       <div style="font-weight:600; font-size:16px;">Neuw-Bloom</div>
-      <div style="opacity:0.85; font-size:12px; margin-top:6px;">Nature-infused brain companion • 0→100% daily mood journey</div>
+      <div style="opacity:0.85; font-size:12px; margin-top:6px;">Nature-infused brain companion</div>
+    </div>
+
+    <!-- Install prompt overlay -->
+    <div class="install-overlay" id="installOverlay">
+      <h4>Install Neuw-Bloom</h4>
+      <p>Continue using the app seamlessly on your home screen.</p>
+      <button id="installBtn">Install App</button>
     </div>
   </div>
 
   <script>
-    // ========= Time clock =========
+    // Time updater
     const timeEl = document.getElementById('time');
     function updateTime(){
       const now = new Date();
@@ -294,100 +158,38 @@
     setInterval(updateTime, 1000);
     updateTime();
 
-    // ========= Battery API =========
-    const batteryText = document.getElementById('battery-text');
-    const batteryLevelEl = document.getElementById('battery-level');
+    // PWA Install logic
+    let deferredPrompt;
+    const installOverlay = document.getElementById('installOverlay');
+    const installBtn = document.getElementById('installBtn');
 
-    function setBatteryLevel(pct){
-      const pctVal = Math.round(pct * 100);
-      batteryText.textContent = pctVal + '%';
-      batteryLevelEl.style.width = pctVal + '%';
-      // color change when low
-      if (pctVal <= 20) batteryLevelEl.style.background = 'linear-gradient(90deg,#ff7a7a,#ffb46b)';
-      else batteryLevelEl.style.background = 'linear-gradient(90deg,#7efc78,#40d7ff)';
-    }
-
-    if ('getBattery' in navigator){
-      navigator.getBattery().then(function(batt){
-        setBatteryLevel(batt.level);
-        batt.addEventListener('levelchange', ()=> setBatteryLevel(batt.level));
-        batt.addEventListener('chargingchange', ()=> {
-          // when charging, show a slight pulse
-          if (batt.charging) batteryLevelEl.style.boxShadow = '0 6px 18px rgba(64,215,255,0.18)';
-          else batteryLevelEl.style.boxShadow = 'none';
-        });
-      }).catch(()=> {
-        batteryText.textContent = 'n/a';
-      });
-    } else {
-      // Fallback: not supported (Safari/iOS) — show placeholder
-      batteryText.textContent = 'n/a';
-      batteryLevelEl.style.width = '55%';
-    }
-
-    // ========= Slider logic =========
-    const slidesEl = document.getElementById('slides');
-    const dots = Array.from(document.querySelectorAll('.dot'));
-    let current = 0;
-    const total = 3;
-
-    function goTo(index){
-      current = (index + total) % total;
-      slidesEl.style.transform = `translateX(-${current * (100/total)}%)`;
-      dots.forEach((d, i) => {
-        d.classList.toggle('active', i === current);
-        d.setAttribute('aria-selected', i === current ? 'true' : 'false');
-      });
-    }
-
-    // auto slide every 4 seconds
-    let auto = setInterval(()=> goTo(current + 1), 4000);
-
-    // dot click
-    dots.forEach(d => {
-      d.addEventListener('click', (e) => {
-        clearInterval(auto);
-        const target = Number(d.getAttribute('data-dot'));
-        goTo(target);
-        // restart auto after short delay
-        setTimeout(()=> { auto = setInterval(()=> goTo(current + 1), 4000); }, 3000);
-      });
-      // keyboard accessible
-      d.addEventListener('keydown', (ev) => {
-        if (ev.key === 'Enter' || ev.key === ' ') {
-          ev.preventDefault();
-          d.click();
-        }
-      });
+    window.addEventListener('beforeinstallprompt', (e) => {
+      e.preventDefault();
+      deferredPrompt = e;
+      installOverlay.style.display = 'block';
     });
 
-    // initial
-    goTo(0);
+    installBtn.addEventListener('click', () => {
+      installOverlay.style.display = 'none';
+      if (deferredPrompt) {
+        deferredPrompt.prompt();
+        deferredPrompt.userChoice.then(choice => {
+          if (choice.outcome === 'accepted') {
+            console.log('User installed app');
+          } else {
+            console.log('User dismissed install');
+          }
+          deferredPrompt = null;
+        });
+      }
+    });
 
-    // Optional: basic swipe support for mobile
-    (function enableSwipe(){
-      const container = document.getElementById('slider');
-      let startX = 0, deltaX = 0, isDown = false;
-      container.addEventListener('touchstart', (e) => {
-        isDown = true; startX = e.touches[0].clientX;
-        clearInterval(auto);
-      },{
-        passive: true
+    // Service Worker register
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('sw.js').then(() => {
+        console.log('Service Worker registered');
       });
-      container.addEventListener('touchmove', (e) => {
-        if(!isDown) return;
-        deltaX = e.touches[0].clientX - startX;
-      }, { passive: true });
-      container.addEventListener('touchend', () => {
-        isDown = false;
-        if (Math.abs(deltaX) > 50){
-          if (deltaX < 0) goTo(current + 1);
-          else goTo(current - 1);
-        }
-        deltaX = 0;
-        setTimeout(()=> { auto = setInterval(()=> goTo(current + 1), 4000); }, 3000);
-      });
-    })();
+    }
   </script>
 </body>
 </html>

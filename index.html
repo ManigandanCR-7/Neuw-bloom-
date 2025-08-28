@@ -288,7 +288,7 @@
   top: 275px; 
   right: 14px;
   width: 175px; 
-  height: 180px; /* enough space for tubes */
+  height: 200px; /* increased height for taller tubes */
   border-radius: 32px;
   background: rgba(255, 255, 255, 0.1);
   backdrop-filter: blur(14px) saturate(180%);
@@ -301,13 +301,13 @@
 /* Tube wrapper: horizontal alignment */
 .soul-chemistry .tube-wrapper {
   position: absolute;
-  bottom: 32px;      /* leave space for statement */
+  bottom: 32px; 
   left: 50%;
   transform: translateX(-50%);
   display: flex;
   justify-content: space-between;
-  width: 120px;      /* spacing between tubes */
-  height: 100px;     /* tube height */
+  width: 120px; 
+  height: 130px; /* taller tube height */
 }
 
 /* Individual tube container */
@@ -319,10 +319,20 @@
 
 /* Tube shape */
 .soul-chemistry .tube {
-  width: 18px;       /* tube width */
-  height: 100%;      /* full tube height */
-  background: #000;  /* dark black tube */
+  position: relative;
+  width: 18px;      
+  height: 100%;     
+  background: #000;  
   border-radius: 9px;
+  overflow: hidden;
+  display: flex;
+  align-items: flex-end; /* liquid fills from bottom */
+}
+
+/* Liquid inside tube */
+.soul-chemistry .tube .liquid {
+  width: 100%;
+  border-radius: 8px 8px 0 0; /* top rounded */
 }
 
 /* Tube labels (D, S, O) */
@@ -385,23 +395,28 @@
   <div class="tube-wrapper">
     <!-- Tube 1 -->
     <div class="tube-container">
-      <div class="tube"></div>
+      <div class="tube">
+        <div class="liquid" style="height:20%; background: #8e44ad;"></div>
+      </div>
       <div class="tube-label">D</div>
     </div>
     <!-- Tube 2 -->
     <div class="tube-container">
-      <div class="tube"></div>
+      <div class="tube">
+        <div class="liquid" style="height:40%; background: #27ae60;"></div>
+      </div>
       <div class="tube-label">S</div>
     </div>
     <!-- Tube 3 -->
     <div class="tube-container">
-      <div class="tube"></div>
+      <div class="tube">
+        <div class="liquid" style="height:60%; background: #1abc9c;"></div>
+      </div>
       <div class="tube-label">O</div>
     </div>
   </div>
   <div class="statement">Soul Chemistry</div>
 </div>
-
 
 
 

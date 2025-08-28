@@ -285,33 +285,28 @@
     /* Soul Chemistry Slide */
 .soul-chemistry {
   position: absolute;
-  top: 270px;           /* adjust gap from clock (same as welcome note) */
-  right: 14px;
-  width: 175px;         /* similar width to welcome note */
-  height: 120px;        /* adjust height as needed */
-  padding: 20px;
+  top: 250px; /* gap below the clock */
+  left: 14px;
+  width: 175px;
+  height: 100px; /* adjust height as needed */
   border-radius: 32px;
-  background: rgba(255, 255, 255, 0.1); /* glass effect */
+  background: rgba(255, 255, 255, 0.1); /* glass morphism */
   backdrop-filter: blur(14px) saturate(180%);
   border: 1px solid rgba(255, 255, 255, 0.28);
-  color: #fff;
-  z-index: 6;
-  display: none;        /* show when home appears */
   box-shadow: 0 8px 24px rgba(0,0,0,0.4),
               inset 0 1px 4px rgba(255,255,255,0.18);
-  font-size: 15px;
-  line-height: 1.6;
+  z-index: 6;
+}
+
+.soul-chemistry .statement {
+  font-size: 12px;       /* small text */
+  opacity: 0.8;          /* subtle look */
+  position: absolute;
+  bottom: 12px;          /* placed at bottom */
+  left: 50%;
+  transform: translateX(-50%);
   text-align: center;
 }
-
-
-.soul-chemistry .name {
-  font-size: 20px;
-  font-weight: 700;
-  margin: 0 0 22px;
-  
-}
-
 
 
   </style>
@@ -350,9 +345,10 @@
   </div>
 </div>
 
-    <div class="soul-chemistry" id="soulChemistry">
-       <div class="name">Neuw-Bloom</div>
+  <div class="soul-chemistry" id="soulChemistry">
+  <div class="statement">Neuw-Bloom</div>  <!-- bottom small text -->
 </div>
+
 
 
 

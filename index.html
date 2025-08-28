@@ -282,6 +282,40 @@
     transform: translateX(-100%);
   }
 }
+    /* Soul Chemistry Slide */
+.soul-chemistry {
+  position: absolute;
+  top: 240px;           /* adjust gap from clock (same as welcome note) */
+  left: 14px;
+  width: 175px;         /* similar width to welcome note */
+  height: 120px;        /* adjust height as needed */
+  padding: 20px;
+  border-radius: 32px;
+  background: rgba(255, 255, 255, 0.1); /* glass effect */
+  backdrop-filter: blur(14px) saturate(180%);
+  border: 1px solid rgba(255, 255, 255, 0.28);
+  color: #fff;
+  z-index: 6;
+  display: none;        /* show when home appears */
+  box-shadow: 0 8px 24px rgba(0,0,0,0.4),
+              inset 0 1px 4px rgba(255,255,255,0.18);
+  font-size: 15px;
+  line-height: 1.6;
+  text-align: center;
+}
+
+/* Soul Chemistry Text */
+.soul-chemistry .title {
+  font-size: 16px;
+  font-weight: 600;
+  margin-bottom: 6px;
+}
+
+.soul-chemistry .name {
+  font-size: 20px;
+  font-weight: 700;
+}
+
 
 
   </style>
@@ -318,6 +352,10 @@
   <div class="quote-container">
     <div class="quote-line">"Nature heals , the minds bloom"</div>
   </div>
+</div>
+
+    <div class="soul-chemistry" id="soulChemistry">
+  <div class="title">Soul Chemistry</div>
 </div>
 
 
@@ -462,6 +500,15 @@ function showHome() {
   clockWidget.style.display = "flex"; 
   document.getElementById("welcomeNote").style.display = "block"; // 👈 show Welcome Note
 }
+
+  function showHome() {
+  homeContent.style.display = "block";
+  musicToggle.style.display = "flex";
+  clockWidget.style.display = "flex"; 
+  welcomeNote.style.display = "block";      // Welcome note
+  document.getElementById("soulChemistry").style.display = "block"; // Soul Chemistry
+}
+
 
 
 

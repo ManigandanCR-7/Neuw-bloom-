@@ -288,7 +288,7 @@
   top: 275px; 
   right: 14px;
   width: 175px; 
-  height: 180px; /* increased height for tubes */
+  height: 180px; 
   border-radius: 32px;
   background: rgba(255, 255, 255, 0.1);
   backdrop-filter: blur(14px) saturate(180%);
@@ -296,18 +296,19 @@
   box-shadow: 0 8px 24px rgba(0,0,0,0.4),
               inset 0 1px 4px rgba(255,255,255,0.18);
   z-index: 6;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-end;
+  padding-bottom: 20px;
 }
 
 /* Tube wrapper */
 .soul-chemistry .tube-wrapper {
-  position: absolute;
-  bottom: 32px;      /* leave space for statement */
-  left: 50%;
-  transform: translateX(-50%);
   display: flex;
   justify-content: space-between;
-  width: 130px;      /* horizontal spacing */
-  height: 100px;     /* height of tubes */
+  width: 130px;    /* horizontal spacing */
+  height: 100px;   /* tube height */
   align-items: flex-end;
 }
 
@@ -318,28 +319,15 @@
   align-items: center;
 }
 
-/* Individual tube */
+/* Tube shape */
 .soul-chemistry .tube {
-  position: relative;
-  width: 14px;
+  width: 18px;
   height: 100%;
   background: #000;   /* dark black tube */
-  border-radius: 6px;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-around; /* evenly space the marks */
-  padding: 10% 0;   /* optional spacing top/bottom */
+  border-radius: 9px; /* round edges to appear tube-like */
 }
 
-/* Marks inside tube */
-.soul-chemistry .tube .mark {
-  width: 100%;
-  height: 2px;
-  background: #fff;   /* mark color */
-  border-radius: 1px;
-}
-
-/* Tube labels (D, S, O) */
+/* Tube labels */
 .soul-chemistry .tube-label {
   font-size: 12px;
   color: #fff;
@@ -351,13 +339,9 @@
 .soul-chemistry .statement {
   font-size: 12px;
   opacity: 0.8;
-  position: absolute;
-  bottom: 6px; 
-  left: 50%;
-  transform: translateX(-50%);
   text-align: center;
+  margin-top: 8px;
 }
-
 
   </style>
 </head>
@@ -399,34 +383,23 @@
   <div class="tube-wrapper">
     <!-- Tube 1 -->
     <div class="tube-container">
-      <div class="tube">
-        <div class="mark"></div>
-        <div class="mark"></div>
-        <div class="mark"></div>
-      </div>
+      <div class="tube"></div>
       <div class="tube-label">D</div>
     </div>
     <!-- Tube 2 -->
     <div class="tube-container">
-      <div class="tube">
-        <div class="mark"></div>
-        <div class="mark"></div>
-        <div class="mark"></div>
-      </div>
+      <div class="tube"></div>
       <div class="tube-label">S</div>
     </div>
     <!-- Tube 3 -->
     <div class="tube-container">
-      <div class="tube">
-        <div class="mark"></div>
-        <div class="mark"></div>
-        <div class="mark"></div>
-      </div>
+      <div class="tube"></div>
       <div class="tube-label">O</div>
     </div>
   </div>
   <div class="statement">Soul Chemistry</div>
 </div>
+
 
 
 

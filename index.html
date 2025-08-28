@@ -282,9 +282,7 @@
     transform: translateX(-100%);
   }
 }
-    /* Soul Chemistry Slide */
-/* Soul Chemistry container already defined */
-    /* Soul Chemistry container remains same */
+
 .soul-chemistry {
   position: absolute;
   top: 275px; 
@@ -299,19 +297,8 @@
               inset 0 1px 4px rgba(255,255,255,0.18);
   z-index: 6;
 }
-
-/* Bottom statement */
-.soul-chemistry .statement {
-  font-size: 12px;
-  opacity: 0.8;
-  position: absolute;
-  bottom: 12px;
-  left: 50%;
-  transform: translateX(-50%);
-  text-align: center;
-}
-
-/* Wrapper for multiple tubes */
+    /* Soul Chemistry Slide */
+/* Soul Chemistry container already defined */
 .soul-chemistry .tube-wrapper {
   position: absolute;
   bottom: 32px; /* leave space for statement */
@@ -319,18 +306,26 @@
   transform: translateX(-50%);
   display: flex;
   justify-content: space-between;
-  width: 70px; /* width to fit 3 tubes with gaps */
+  width: 110px; /* increased width to add more gap between tubes */
   height: 70%;
   align-items: flex-end;
+}
+
+/* Container for each tube + label */
+.soul-chemistry .tube-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 /* Individual tube */
 .soul-chemistry .tube {
   position: relative;
-  width: 12px;       /* visible width */
+  width: 12px;
   height: 100%;
   background: rgba(255,255,255,0.3);
   border-radius: 6px;
+  margin-bottom: 4px; /* space for label */
 }
 
 /* Marks inside each tube */
@@ -342,6 +337,24 @@
   background: #fff;
 }
 
+/* Tube labels (D, S, O) */
+.soul-chemistry .tube-label {
+  font-size: 12px;
+  color: #fff;
+  opacity: 0.9;
+  margin-top: 2px;
+}
+
+/* Bottom statement */
+.soul-chemistry .statement {
+  font-size: 12px;
+  opacity: 0.8;
+  position: absolute;
+  bottom: 6px; /* slightly below tubes */
+  left: 50%;
+  transform: translateX(-50%);
+  text-align: center;
+}
 
 
   </style>
@@ -382,29 +395,32 @@
 
    <div class="soul-chemistry" id="soulChemistry">
   <div class="tube-wrapper">
-    <div class="tube">
-      <div class="mark" style="bottom:0%"></div>
-      <div class="mark" style="bottom:20%"></div>
-      <div class="mark" style="bottom:40%"></div>
-      <div class="mark" style="bottom:60%"></div>
-      <div class="mark" style="bottom:80%"></div>
-      <div class="mark" style="bottom:100%"></div>
+    <div class="tube-container">
+      <div class="tube">
+        <div class="mark" style="bottom:20%"></div>
+        <div class="mark" style="bottom:40%"></div>
+        <div class="mark" style="bottom:60%"></div>
+        <div class="mark" style="bottom:80%"></div>
+      </div>
+      <div class="tube-label">D</div>
     </div>
-    <div class="tube">
-      <div class="mark" style="bottom:0%"></div>
-      <div class="mark" style="bottom:20%"></div>
-      <div class="mark" style="bottom:40%"></div>
-      <div class="mark" style="bottom:60%"></div>
-      <div class="mark" style="bottom:80%"></div>
-      <div class="mark" style="bottom:100%"></div>
+    <div class="tube-container">
+      <div class="tube">
+        <div class="mark" style="bottom:20%"></div>
+        <div class="mark" style="bottom:40%"></div>
+        <div class="mark" style="bottom:60%"></div>
+        <div class="mark" style="bottom:80%"></div>
+      </div>
+      <div class="tube-label">S</div>
     </div>
-    <div class="tube">
-      <div class="mark" style="bottom:0%"></div>
-      <div class="mark" style="bottom:20%"></div>
-      <div class="mark" style="bottom:40%"></div>
-      <div class="mark" style="bottom:60%"></div>
-      <div class="mark" style="bottom:80%"></div>
-      <div class="mark" style="bottom:100%"></div>
+    <div class="tube-container">
+      <div class="tube">
+        <div class="mark" style="bottom:20%"></div>
+        <div class="mark" style="bottom:40%"></div>
+        <div class="mark" style="bottom:60%"></div>
+        <div class="mark" style="bottom:80%"></div>
+      </div>
+      <div class="tube-label">O</div>
     </div>
   </div>
   <div class="statement">Neuw-Bloom</div>

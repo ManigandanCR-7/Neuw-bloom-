@@ -283,14 +283,15 @@
   }
 }
     /* Soul Chemistry Slide */
+/* Soul Chemistry container already defined */
 .soul-chemistry {
   position: absolute;
   top: 275px; /* gap below the clock */
   right: 14px;
   width: 175px;
-  height: 128px; /* adjust height as needed */
+  height: 128px;
   border-radius: 32px;
-  background: rgba(255, 255, 255, 0.1); /* glass morphism */
+  background: rgba(255, 255, 255, 0.1); 
   backdrop-filter: blur(14px) saturate(180%);
   border: 1px solid rgba(255, 255, 255, 0.28);
   box-shadow: 0 8px 24px rgba(0,0,0,0.4),
@@ -298,15 +299,60 @@
   z-index: 6;
 }
 
+/* Bottom small statement */
 .soul-chemistry .statement {
-  font-size: 12px;       /* small text */
-  opacity: 0.8;          /* subtle look */
+  font-size: 12px;
+  opacity: 0.8;
   position: absolute;
-  bottom: 12px;          /* placed at bottom */
+  bottom: 12px;
   left: 50%;
   transform: translateX(-50%);
   text-align: center;
 }
+
+/* Tube container */
+.soul-chemistry .tube-container {
+  position: absolute;
+  bottom: 32px; /* leave space for statement */
+  left: 50%;
+  transform: translateX(-50%);
+  width: 20px;        /* tube width */
+  height: 70%;        /* tube height relative to component */
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+}
+
+/* Tube itself */
+.soul-chemistry .tube {
+  position: relative;
+  width: 6px;       /* narrow tube */
+  height: 100%;
+  background: rgba(255,255,255,0.3);
+  border-radius: 3px;
+}
+
+/* Marks along the tube */
+.soul-chemistry .tube .mark {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 12px;           /* mark width */
+  height: 2px;           /* mark thickness */
+  background: #fff;
+}
+
+/* Text above marks */
+.soul-chemistry .tube .mark span {
+  position: absolute;
+  bottom: 100%;          /* above the mark */
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 10px;
+  color: #fff;
+  margin-bottom: 2px;
+}
+
 
 
   </style>
@@ -345,9 +391,20 @@
   </div>
 </div>
 
-  <div class="soul-chemistry" id="soulChemistry">
-  <div class="statement">Neuw-Bloom</div>  <!-- bottom small text -->
+    <div class="soul-chemistry" id="soulChemistry">
+  <div class="tube-container">
+    <div class="tube">
+      <div class="mark" style="bottom:0%"><span>20</span></div>
+      <div class="mark" style="bottom:20%"><span>30</span></div>
+      <div class="mark" style="bottom:40%"><span>40</span></div>
+      <div class="mark" style="bottom:60%"><span>60</span></div>
+      <div class="mark" style="bottom:80%"><span>80</span></div>
+      <div class="mark" style="bottom:100%"><span>100</span></div>
+    </div>
+  </div>
+  <div class="statement">Neuw-Bloom</div>
 </div>
+
 
 
 

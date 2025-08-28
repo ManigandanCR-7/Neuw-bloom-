@@ -358,6 +358,10 @@
   });
 
 // Clock JS (updates every second)
+  // Analogue clock logic
+const hourHand = document.getElementById("hourHand");
+const minuteHand = document.getElementById("minuteHand");
+  
 function updateClock() {
   const now = new Date();
   const hour = now.getHours() % 12;
@@ -373,6 +377,13 @@ function updateClock() {
 }
 setInterval(updateClock, 1000);
 updateClock();
+
+  // Show clock when home appears
+function showHome() {
+  homeContent.style.display = "block";
+  musicToggle.style.display = "flex";
+  clockWidget.style.display = "flex"; // 👈 show analogue clock
+}
 
 
 

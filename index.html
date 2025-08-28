@@ -221,37 +221,63 @@ border: 2px dotted rgb(255, 255, 255); /* white dotted circle */
 }
 
     /* Welcome Note */
+/* Welcome Note */
 .welcome-note {
   position: absolute;
-  top: 110px; /* aligned near clock */
-  right: 170px; /* leave space for clock at right */
-  width: 308px;
-  height: 175px;
-  border-radius: 45px;
+  top: 100px;       /* aligned near clock */
+  left: 14px;       /* left side inside frame */
+  width: 180px;
+  padding: 16px;
+  border-radius: 16px;
   background: rgba(255, 255, 255, 0.08);
-  backdrop-filter: blur(18px) saturate(160%);
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35),
-              inset 0 1px 3px rgba(255,255,255,0.15);
-  padding: 18px 20px;
+  backdrop-filter: blur(12px) saturate(160%);
+  border: 1px solid rgba(255, 255, 255, 0.25);
   color: #fff;
-  font-size: 14px;
-  line-height: 1.4;
-  display: none; /* hidden until home */
   z-index: 6;
+  display: none; /* hidden until home */
+  box-shadow: 0 6px 20px rgba(0,0,0,0.35), inset 0 1px 3px rgba(255,255,255,0.15);
 }
 
-.welcome-note h3 {
+/* Text styles */
+.welcome-note .small-line {
+  font-size: 12px;
+  opacity: 0.8;
+  margin: 0 0 6px;
+}
+
+.welcome-note .big-line {
+  font-size: 20px;
+  font-weight: 700;
   margin: 0 0 10px;
-  font-size: 18px;
-  font-weight: 600;
 }
 
-.welcome-note p {
-  margin: 0;
-  opacity: 0.85;
+.welcome-note .quote-line {
   font-size: 13px;
+  font-style: italic;
+  white-space: nowrap;
+  overflow: hidden;
+  display: inline-block;
+  position: relative;
+  animation: glide 4s ease-in-out infinite;
 }
+
+/* Glide animation (center → sides → back) */
+@keyframes glide {
+  0%, 100% {
+    transform: translateX(0);   /* center */
+    text-align: center;
+  }
+  25% {
+    transform: translateX(-20px); /* shift left */
+  }
+  50% {
+    transform: translateX(20px);  /* shift right */
+  }
+  75% {
+    transform: translateX(-10px); /* small glide back */
+  }
+}
+
 
 
   </style>
@@ -283,10 +309,13 @@ border: 2px dotted rgb(255, 255, 255); /* white dotted circle */
 </div>
 
     <!-- Welcome Note Widget -->
+<!-- Welcome Note Component -->
 <div class="welcome-note" id="welcomeNote">
-  <h3>Welcome 🌿</h3>
-  <p>Discover the Neuw-Bloom experience, your nature-infused brain companion.</p>
+  <p class="small-line">Welcome to</p>
+  <p class="big-line">Neuw-Bloom</p>
+  <p class="quote-line">“Nature heals, mind blooms.”</p>
 </div>
+
 
 
     <!-- bottom content (home screen) -->
@@ -422,11 +451,12 @@ function showHome() {
   musicToggle.style.display = "flex";
   clockWidget.style.display = "flex"; // 👈 show analogue clock
 }
-  function showHome() {
+  
+ function showHome() {
   homeContent.style.display = "block";
   musicToggle.style.display = "flex";
-  clockWidget.style.display = "flex";
-  welcomeNote.style.display = "block"; // 👈 show welcome note
+  clockWidget.style.display = "flex"; 
+  document.getElementById("welcomeNote").style.display = "block"; // 👈 show Welcome Note
 }
 
 

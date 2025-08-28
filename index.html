@@ -220,6 +220,40 @@ border: 2px dotted rgb(255, 255, 255); /* white dotted circle */
   background: transparent; /* transparent so hands show */
 }
 
+    /* Welcome Note */
+.welcome-note {
+  position: absolute;
+  top: 110px; /* aligned near clock */
+  right: 170px; /* leave space for clock at right */
+  width: 308px;
+  height: 175px;
+  border-radius: 45px;
+  background: rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(18px) saturate(160%);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35),
+              inset 0 1px 3px rgba(255,255,255,0.15);
+  padding: 18px 20px;
+  color: #fff;
+  font-size: 14px;
+  line-height: 1.4;
+  display: none; /* hidden until home */
+  z-index: 6;
+}
+
+.welcome-note h3 {
+  margin: 0 0 10px;
+  font-size: 18px;
+  font-weight: 600;
+}
+
+.welcome-note p {
+  margin: 0;
+  opacity: 0.85;
+  font-size: 13px;
+}
+
+
   </style>
 </head>
 <body>
@@ -247,6 +281,13 @@ border: 2px dotted rgb(255, 255, 255); /* white dotted circle */
     <div class="clock-dots"></div>
   </div>
 </div>
+
+    <!-- Welcome Note Widget -->
+<div class="welcome-note" id="welcomeNote">
+  <h3>Welcome 🌿</h3>
+  <p>Discover the Neuw-Bloom experience, your nature-infused brain companion.</p>
+</div>
+
 
     <!-- bottom content (home screen) -->
     <div class="content-bottom" id="homeContent">
@@ -380,6 +421,12 @@ function showHome() {
   homeContent.style.display = "block";
   musicToggle.style.display = "flex";
   clockWidget.style.display = "flex"; // 👈 show analogue clock
+}
+  function showHome() {
+  homeContent.style.display = "block";
+  musicToggle.style.display = "flex";
+  clockWidget.style.display = "flex";
+  welcomeNote.style.display = "block"; // 👈 show welcome note
 }
 
 

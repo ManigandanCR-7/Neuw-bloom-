@@ -158,7 +158,39 @@
   -webkit-tap-highlight-color: transparent;
   outline: none;
 }
+    /* Clock Widget */
+.clock-widget {
+  position: absolute;
+  top: 70px; /* place below music button */
+  right: 14px;
+  width: 140px;
+  height: 140px;
+  border-radius: 50%;
+  border: 1px solid rgba(255,255,255,0.25);
+  background: rgba(255,255,255,0.08);
+  backdrop-filter: blur(14px) saturate(160%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 28px;
+  font-weight: 600;
+  color: #fff;
+  box-shadow: 0 6px 18px rgba(0,0,0,0.35), inset 0 1px 4px rgba(255,255,255,0.3);
+  animation: glowPulse 3s infinite ease-in-out;
+  z-index: 6;
+  display: none; /* hidden until home */
+}
 
+.clock-widget span {
+  text-shadow: 0 0 8px rgba(0,255,180,0.7);
+}
+
+/* Glow animation */
+@keyframes glowPulse {
+  0% { box-shadow: 0 0 10px rgba(0,255,200,0.3); }
+  50% { box-shadow: 0 0 20px rgba(0,255,200,0.6); }
+  100% { box-shadow: 0 0 10px rgba(0,255,200,0.3); }
+}
 
   </style>
 </head>
@@ -174,6 +206,12 @@
     <audio id="bgMusic" loop>
       <source src="Sound of a mountain river and the singing of birds. 10 minutes for meditation and relaxation..mp3" type="audio/mp3" />
     </audio>
+
+    <!-- Clock Widget -->
+<div class="clock-widget" id="clockWidget">
+  <span id="clockTime">--:--</span>
+</div>
+
 
     <!-- bottom content (home screen) -->
     <div class="content-bottom" id="homeContent">
@@ -280,6 +318,28 @@
       });
     }
   });
+
+  // Clock update logic
+const clockWidget = document.getElementById("clockWidget");
+const clockTime = document.getElementById("clockTime");
+
+function updateClock() {
+  const now = new Date();
+  let h = now.getHours().toString().padStart(2,"0");
+  let m = now.getMinutes().toString().padStart(2,"0");
+  clockTime.textContent = `${h}:${m}`;
+}
+
+setInterval(updateClock, 1000);
+updateClock();
+
+// Show clock when home appears
+function showHome() {
+  homeContent.style.display = "block";
+  musicToggle.style.display = "flex";
+  clockWidget.style.display = "flex"; // 👈 show clock
+}
+
 
 // Music toggle logic
 musicToggle.addEventListener('click', () => {

@@ -155,8 +155,8 @@
   position: absolute;
   top: 95px; /* space below music button */
   right: 14px;
-  width: 140px;
-  height: 140px;
+  width: 110px;   /* smaller */
+  height: 110px;  /* smaller */
   border-radius: 50%;
   background: rgba(0, 0, 0, 0.6); /* black glass */
   backdrop-filter: blur(14px) saturate(160%);
@@ -189,20 +189,20 @@
 }
 
 .hand.hour {
-  width: 4px;
-  height: 35px;
-  border: 2px dotted rgb(255, 255, 255); /* white dotted circle */
-  background:rgb(255, 255, 255) ; /* pure white hour hand */
+  width: 3px;
+  height: 28px; /* reduced for smaller clock */
+  border: 2px dotted rgb(255, 255, 255);
+  background: rgb(255, 255, 255);
 }
 
 .hand.minute {
-  width: 3px;
-  height: 43px;
-border: 2px dotted rgb(255, 255, 255); /* white dotted circle */
-  background: rgb(255, 255, 255); /* pure white minute hand */
+  width: 2.5px;
+  height: 40px; /* reduced for smaller clock */
+  border: 2px dotted rgb(255, 255, 255);
+  background: rgb(255, 255, 255);
 }
 
-/* Dotted Ring (behind hands) */
+/* Dotted Ring */
 .clock-dots {
   position: absolute;
   width: 100%;
@@ -214,11 +214,12 @@ border: 2px dotted rgb(255, 255, 255); /* white dotted circle */
 .clock-dots::before {
   content: "";
   position: absolute;
-  inset: 10px; /* inner spacing for dotted border */
+  inset: 8px; /* shrink proportionally */
   border-radius: 50%;
-  border: 2px dotted rgb(255, 255, 255); /* white dotted circle */
-  background: transparent; /* transparent so hands show */
+  border: 2px dotted rgb(255, 255, 255);
+  background: transparent;
 }
+
 
     /* Welcome Note */
 /* Welcome Note */
@@ -236,6 +237,7 @@ border: 2px dotted rgb(255, 255, 255); /* white dotted circle */
   z-index: 6;
   display: none; /* hidden until home */
   box-shadow: 0 6px 20px rgba(0,0,0,0.35), inset 0 1px 3px rgba(255,255,255,0.15);
+  text-align: center;
 }
 
 /* Text styles */

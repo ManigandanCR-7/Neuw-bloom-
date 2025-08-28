@@ -316,23 +316,54 @@
   flex-direction: column;
   align-items: center;
 }
-
-/* Tube shape */
+/* Individual tube */
 .soul-chemistry .tube {
   position: relative;
-  width: 18px;      
-  height: 100%;     
-  background: #000;  
-  border-radius: 9px;
-  overflow: hidden;
+  width: 18px;
+  height: 120px; /* taller tube */
+  background: rgba(0,0,0,0.8); /* dark black tube */
+  border-radius: 10px;
   display: flex;
   align-items: flex-end; /* liquid fills from bottom */
+  margin: 0 8px;
+  overflow: hidden;
 }
 
-/* Liquid inside tube */
+/* Liquid inside each tube */
 .soul-chemistry .tube .liquid {
   width: 100%;
-  border-radius: 8px 8px 0 0; /* top rounded */
+  border-radius: 10px 10px 0 0;
+  position: relative;
+  box-shadow: 0 0 10px 2px rgba(0,0,0,0.2) inset;
+  animation: bubble 2s infinite ease-in-out;
+}
+
+/* Glowing spark effect using pseudo-element */
+.soul-chemistry .tube .liquid::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 50%;
+  width: 100%;
+  height: 100%;
+  transform: translateX(-50%);
+  background: radial-gradient(circle, rgba(255,255,255,0.6) 0%, transparent 60%);
+  filter: blur(4px);
+  opacity: 0.5;
+  animation: sparkle 1.5s infinite alternate;
+}
+
+/* Bubble animation for liquid movement */
+@keyframes bubble {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-2px); }
+}
+
+/* Sparkle effect */
+@keyframes sparkle {
+  0% { opacity: 0.4; transform: translateY(0); }
+  50% { opacity: 0.6; transform: translateY(-1px); }
+  100% { opacity: 0.4; transform: translateY(0); }
 }
 
 /* Tube labels (D, S, O) */
@@ -391,33 +422,27 @@
 </div>
 
  
-<div class="soul-chemistry" id="soulChemistry">
-  <div class="tube-wrapper">
-    <!-- Tube 1 -->
-    <div class="tube-container">
-      <div class="tube">
-        <div class="liquid" style="height:20%; background: #8e44ad;"></div>
-      </div>
-      <div class="tube-label">D</div>
+<div class="tube-wrapper">
+  <div class="tube-container">
+    <div class="tube">
+      <div class="liquid" style="height:20%; background:#8e44ad;"></div>
     </div>
-    <!-- Tube 2 -->
-    <div class="tube-container">
-      <div class="tube">
-        <div class="liquid" style="height:40%; background: #27ae60;"></div>
-      </div>
-      <div class="tube-label">S</div>
+    <div class="tube-label">D</div>
+  </div>
+  <div class="tube-container">
+    <div class="tube">
+      <div class="liquid" style="height:40%; background:#27ae60;"></div>
     </div>
-    <!-- Tube 3 -->
-    <!-- Tube 3 -->
-<div class="tube-container">
-  <div class="tube">
-    <div class="liquid" style="height:60%; background: #00cfff;"></div>
+    <div class="tube-label">S</div>
   </div>
-  <div class="tube-label">O</div>
-</div>
+  <div class="tube-container">
+    <div class="tube">
+      <div class="liquid" style="height:60%; background:#00cfff;"></div>
+    </div>
+    <div class="tube-label">O</div>
   </div>
-  <div class="statement">Soul Chemistry</div>
 </div>
+
 
 
 

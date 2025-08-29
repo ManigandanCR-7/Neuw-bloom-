@@ -633,7 +633,6 @@
 <audio id="btnClickSound" src="computer-mouse-click-351398.mp3" preload="auto"></audio>
 
     <!-- Music Toggle Button -->
-    <div class="music-toggle" id="musicToggle">🔇</div>
 
     <!-- Install Overlay (Step 1) -->
     <div class="overlay" id="installOverlay">
@@ -794,6 +793,7 @@ setInterval(cycleGlyphs, 3000); // change every 3s
 function startCare() {
     // Hide overlay
     document.getElementById("timeOverlay").style.display = "none";
+    const music = document.getElementById("bgMusic");
     // Show content
     document.getElementById("glassContent").style.display = "block";
 
@@ -872,23 +872,6 @@ buttons.forEach(btn => {
     btn.classList.toggle('active');
   });
 });
-
-// Music toggle logic
-musicToggle.addEventListener('click', () => {
-  if (!musicOn) {
-    bgMusic.play().then(() => {
-      musicOn = true;
-      musicToggle.textContent = "🎵";
-      musicToggle.classList.add("active"); // glow effect
-    }).catch(err => console.log("Play error:", err));
-  } else {
-    bgMusic.pause();
-    musicOn = false;
-    musicToggle.textContent = "🔇";
-    musicToggle.classList.remove("active");
-  }
-});
-
 
   showCorrectUI();
 

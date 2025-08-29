@@ -352,6 +352,55 @@
   transform: translateX(-50%);
   text-align: center;
 }
+    /* Glyph Matrix Container */
+.glyph-matrix {
+  position: absolute;
+  top: 430px; /* gap below written note */
+  right: 14px;
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  background: rgba(0,0,0,0.6);
+  backdrop-filter: blur(14px) saturate(160%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 6;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.5),
+              inset 0 1px 4px rgba(255,255,255,0.1);
+  overflow: hidden;
+}
+
+/* Glyph icon */
+.glyph {
+  position: absolute;
+  font-size: 32px;
+  opacity: 0;
+  transform: scale(0.9);
+  transition: all 0.8s ease;
+}
+
+/* Active glyph */
+.glyph.active {
+  opacity: 1;
+  transform: scale(1);
+}
+
+/* Glow pulse */
+.glyph.active {
+  text-shadow: 0 0 8px rgba(255,255,255,0.7),
+               0 0 15px rgba(255,255,255,0.4);
+}
+
+/* Glyph caption text */
+.glyph-caption {
+  font-size: 12px;
+  opacity: 0.8;
+  text-align: center;
+  margin-top: 8px;
+  color: #fff;
+}
+
 
 
   </style>
@@ -417,6 +466,15 @@
   <div class="statement">Soul Chemistry</div>
 </div>
 
+<div class="glyph-wrapper">
+  <div class="glyph-matrix" id="glyphMatrix">
+    <div class="glyph" data-text="Work">💻</div>
+    <div class="glyph" data-text="Meditate">🧘</div>
+    <div class="glyph" data-text="Sip Water">💧</div>
+    <div class="glyph" data-text="Walk">🚶</div>
+  </div>
+  <div class="glyph-caption" id="glyphCaption">Work</div>
+</div>
 
 
 
@@ -569,6 +627,20 @@ function showHome() {
   welcomeNote.style.display = "block";      // Welcome note
   document.getElementById("soulChemistry").style.display = "block"; // Soul Chemistry
 }
+
+  const glyphs = document.querySelectorAll(".glyph");
+const caption = document.getElementById("glyphCaption");
+let index = 0;
+
+function cycleGlyphs() {
+  glyphs.forEach((g, i) => g.classList.remove("active"));
+  glyphs[index].classList.add("active");
+  caption.textContent = glyphs[index].dataset.text;
+  index = (index + 1) % glyphs.length;
+}
+
+cycleGlyphs();
+setInterval(cycleGlyphs, 3000); // change every 3s
 
 
 

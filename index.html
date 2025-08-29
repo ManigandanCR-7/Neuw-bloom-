@@ -536,7 +536,7 @@
 <body>
   <div class="phone">
     <!-- background video -->
-    <video class="bg" autoplay muted loop playsinline>
+    <video class="bgVideo" autoplay muted loop playsinline>
       <source src="125314-733046618_small.mp4" type="video/mp4" />
     </video>
     <div class="back-overlay"></div>
@@ -664,6 +664,15 @@
   </div>
 
 <script>
+
+   const bgVideo = document.getElementById("bgVideo");
+
+  // Ensure it keeps looping endlessly
+  bgVideo.addEventListener("ended", () => {
+    bgVideo.currentTime = 0;
+    bgVideo.play();
+  });
+  
   const installOverlay = document.getElementById('installOverlay');
   const successOverlay = document.getElementById('successOverlay');
   const homeContent = document.getElementById('homeContent');

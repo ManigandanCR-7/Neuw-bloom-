@@ -4,6 +4,7 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Neuw-Bloom</title>
+  <link rel="manifest" href="manifest.json" />
   <meta name="theme-color" content="#0f172a" />
   <style>
     :root {
@@ -683,14 +684,34 @@
 
 <audio id="btnClickSound" src="computer-mouse-click-351398.mp3" preload="auto"></audio>
 
-    <!-- Music Toggle Button -->
-    <div class="music-toggle" id="musicToggle">🔇</div>
 
     <!-- Install Overlay (Step 1) -->
-    
+    <div class="overlay" id="installOverlay">
+      <div class="overlay-card">
+        <h4>Install Neuw-Bloom</h4>
+        <p>Experience seamless access from your home screen.</p>
+        <button id="installBtn">Install App</button>
+      </div>
+    </div>
 
     <!-- Success Overlay (Step 2) -->
- 
+    <div class="overlay" id="successOverlay" style="display:none;">
+      <div class="overlay-card">
+        <h4>🎉 Installed</h4>
+        <p>Check your home screen — Neuw-Bloom is ready!</p>
+      </div>
+    </div>
+
+
+
+    <!-- Desktop Only Overlay -->
+    <div class="overlay" id="desktopOverlay" style="display:none;">
+      <div class="overlay-card">
+        <h4>Mobile Only</h4>
+        <p>You can view our app only on your mobile. <br/> Kindly visit this link through your phone.</p>
+      </div>
+    </div>
+  </div>
 
 <script>
   
@@ -765,22 +786,7 @@
   });
 
 // Clock JS (updates every second)
-  const enterBtn = document.getElementById("enterBtn");
-  const splashOverlay = document.getElementById("splashOverlay");
-  const homeContent = document.getElementById("homeContent");
-  const bgMusic = document.getElementById("bgMusic");
-
-  enterBtn.addEventListener("click", () => {
-    // Fade out splash overlay
-    splashOverlay.style.opacity = "0";
-    setTimeout(() => {
-      splashOverlay.style.display = "none";
-      // Show home content
-      homeContent.style.display = "block";
-      // Play background music instantly
-      bgMusic.play().catch(err => console.log("Autoplay blocked:", err));
-    }, 600);
-  });
+  
   
   // Analogue clock logic
 const hourHand = document.getElementById("hourHand");

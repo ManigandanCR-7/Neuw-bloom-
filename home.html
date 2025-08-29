@@ -857,6 +857,16 @@ buttons.forEach(btn => {
   });
 });
 
+  // On home.html
+window.addEventListener("load", () => {
+  if(localStorage.getItem("playMusic") === "true") {
+    const music = document.getElementById("bgMusic");
+    music.play().catch(err => console.log(err));
+    localStorage.removeItem("playMusic"); // clear flag
+  }
+});
+
+
 // Music toggle logic
 musicToggle.addEventListener('click', () => {
   if (!musicOn) {

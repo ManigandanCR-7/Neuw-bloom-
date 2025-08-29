@@ -12,6 +12,7 @@
   --frame-h: 720px;
   font-family: Inter, system-ui, -apple-system, "Segoe UI", Roboto, Arial;
 }
+
 body {
   margin: 0;
   min-height: 100vh;
@@ -21,6 +22,8 @@ body {
   background: linear-gradient(180deg,#0f172a 0%, #071029 100%);
   color: #fff;
 }
+
+/* Phone container */
 .phone {
   width: var(--frame-w);
   height: var(--frame-h);
@@ -33,6 +36,8 @@ body {
   align-items: center;
   justify-content: center;
 }
+
+/* Video background */
 .bg-video {
   position: absolute;
   width: 100%;
@@ -42,6 +47,8 @@ body {
   left: 0;
   z-index: 0;
 }
+
+/* Overlay content */
 .splash-content {
   position: relative;
   z-index: 2;
@@ -50,10 +57,14 @@ body {
   align-items: center;
   gap: 20px;
 }
+
+/* App Icon */
 .app-icon {
   width: 192px;
   height: 192px;
 }
+
+/* Fullscreen Overlay Base */
 .overlay {
   position: absolute;
   inset: 0;
@@ -64,6 +75,7 @@ body {
   align-items: center;
   z-index: 20;
 }
+
 .overlay-card {
   background: rgba(255,255,255,0.1);
   backdrop-filter: blur(16px) saturate(160%);
@@ -74,8 +86,19 @@ body {
   max-width: 280px;
   box-shadow: 0 8px 30px rgba(0,0,0,0.4);
 }
-.overlay-card h4 { margin: 0 0 10px; font-size: 18px; font-weight: 600; }
-.overlay-card p { margin: 0 0 16px; font-size: 13px; opacity: 0.9; }
+
+.overlay-card h4 { 
+  margin: 0 0 10px; 
+  font-size: 18px; 
+  font-weight: 600; 
+}
+
+.overlay-card p { 
+  margin: 0 0 16px; 
+  font-size: 13px; 
+  opacity: 0.9; 
+}
+
 .overlay-card button {
   border: 1px solid rgba(255,255,255,0.3);
   background: rgba(255,255,255,0.15);
@@ -87,7 +110,12 @@ body {
   cursor: pointer;
   transition: 0.3s;
 }
-.overlay-card button:hover { background: rgba(255,255,255,0.25); }
+
+.overlay-card button:hover { 
+  background: rgba(255,255,255,0.25); 
+}
+
+/* Enter Button */
 #enterBtn {
   padding: 12px 28px;
   font-size: 16px;
@@ -100,13 +128,28 @@ body {
   box-shadow: 0 6px 0 #1c5c28, 0 8px 16px rgba(0,0,0,0.3);
   transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
+
 #enterBtn:active {
   transform: translateY(3px);
   box-shadow: 0 3px 0 #1c5c28, 0 4px 8px rgba(0,0,0,0.3);
 }
-.version-text { font-size: 12px; opacity: 0.7; }
-.fade-out { animation: fadeOutOverlay 10s forwards; }
-@keyframes fadeOutOverlay { 0% { opacity: 1;} 90% {opacity:1;} 100% {opacity:0;} }
+
+/* Version text */
+.version-text {
+  font-size: 12px;
+  opacity: 0.7;
+}
+
+/* Fade-out animation */
+.fade-out {
+  animation: fadeOutOverlay 10s forwards;
+}
+
+@keyframes fadeOutOverlay {
+  0% { opacity: 1; }
+  90% { opacity: 1; }
+  100% { opacity: 0; }
+}
 </style>
 </head>
 <body>
@@ -122,6 +165,7 @@ body {
   </div>
 </div>
 
+<!-- Install Overlay -->
 <div class="overlay" id="installOverlay">
   <div class="overlay-card">
     <h4>Install Neuw-Bloom</h4>
@@ -130,6 +174,7 @@ body {
   </div>
 </div>
 
+<!-- Success Overlay -->
 <div class="overlay" id="successOverlay" style="display:none;">
   <div class="overlay-card">
     <h4>🎉 Installed</h4>
@@ -137,6 +182,7 @@ body {
   </div>
 </div>
 
+<!-- Desktop Overlay -->
 <div class="overlay" id="desktopOverlay" style="display:none;">
   <div class="overlay-card">
     <h4>Mobile Only</h4>
@@ -144,78 +190,127 @@ body {
   </div>
 </div>
 
-<audio id="bgMusic" src="assets/bg-music.mp3" loop></audio>
-
 <script>
 const installOverlay = document.getElementById('installOverlay');
 const successOverlay = document.getElementById('successOverlay');
 const installBtn = document.getElementById('installBtn');
 const desktopOverlay = document.getElementById('desktopOverlay');
 const enterBtn = document.getElementById('enterBtn');
-const bgMusic = document.getElementById('bgMusic');
 
 let deferredPrompt;
-let musicOn = false;
 
-// Mobile/Standalone checks
+// Check if app is standalone
 function isStandalone() {
-  return window.matchMedia('(display-mode: standalone)').matches 
-      || window.navigator.standalone === true;
+  return window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true;
 }
-function isMobile() { return /iPhone|iPad|iPod|Android/i.test(navigator.userAgent); }
 
-// Show correct UI
+// Check if mobile
+function isMobile() {
+  return /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+}
+
+// Show correct overlay
 function showCorrectUI() {
-  if(!isMobile()){ desktopOverlay.style.display="flex"; installOverlay.style.display="none"; return;}
+  if(!isMobile()){
+    desktopOverlay.style.display="flex";
+    installOverlay.style.display="none";
+    successOverlay.style.display="none";
+    return;
+  }
   desktopOverlay.style.display="none";
-  if(isStandalone()) { installOverlay.style.display="none"; successOverlay.style.display="none"; } 
-  else { installOverlay.style.display="flex"; }
+  if(isStandalone()){
+    installOverlay.style.display="none";
+    successOverlay.style.display="none";
+  } else {
+    installOverlay.style.display="flex";
+  }
 }
 
-// Handle install prompt
-window.addEventListener('beforeinstallprompt', (e)=>{
+// Before install prompt
+window.addEventListener('beforeinstallprompt', (e) => {
   e.preventDefault();
   deferredPrompt = e;
   showCorrectUI();
 });
 
-installBtn.addEventListener('click', ()=>{
-  if(deferredPrompt){
+// Helper: Set cookie
+function setCookie(name, value, days) {
+  let expires = "";
+  if (days) {
+    const date = new Date();
+    date.setTime(date.getTime() + days*24*60*60*1000);
+    expires = "; expires=" + date.toUTCString();
+  }
+  document.cookie = name + "=" + (value || "") + expires + "; path=/";
+}
+
+// Helper: Get cookie
+function getCookie(name) {
+  const nameEQ = name + "=";
+  const ca = document.cookie.split(';');
+  for(let i=0;i<ca.length;i++) {
+    let c = ca[i];
+    while (c.charAt(0)==' ') c = c.substring(1,c.length);
+    if (c.indexOf(nameEQ) == 0) return c.substring(nameEQ.length,c.length);
+  }
+  return null;
+}
+
+// Show splash after successful install or if cookie exists
+function showSplashAfterInstall() {
+  // Hide install overlay
+  installOverlay.style.display = "none";
+  // Show success overlay briefly
+  successOverlay.style.display = "flex";
+
+  // Fade out success overlay in 10s
+  setTimeout(() => {
+    successOverlay.style.display = "none";
+    // Splash page (icon + click to enter) is already visible
+  }, 10000); 
+
+  // Remember that user installed app
+  setCookie("pwa_installed", "true", 365);
+}
+
+// Check if user already installed
+function checkInstalledCookie() {
+  if (getCookie("pwa_installed") === "true") {
+    installOverlay.style.display = "none";
+    successOverlay.style.display = "none";
+    // Splash page remains visible
+  }
+}
+
+// Install button
+installBtn.addEventListener('click', () => {
+  if (deferredPrompt) {
     deferredPrompt.prompt();
-    deferredPrompt.userChoice.then(choice=>{
-      if(choice.outcome==='accepted'){
-        installOverlay.style.display="none";
-        successOverlay.style.display="flex";
-        successOverlay.classList.add('fade-out');
-        // set cookie to remember installed
-        document.cookie = "appInstalled=true; max-age=31536000; path=/";
-        // fade out in 10s
-        setTimeout(()=>{
-          successOverlay.style.display="none";
-        }, 10000);
+    deferredPrompt.userChoice.then(choice => {
+      if (choice.outcome === 'accepted') {
+        showSplashAfterInstall();
       }
       deferredPrompt = null;
     });
   }
 });
 
-// Play music on first interaction
-document.body.addEventListener('click', function playMusicOnce(){
-  if(!musicOn){
-    bgMusic.play().then(()=>{ musicOn=true; }).catch(err=>console.log(err));
-  }
-  document.body.removeEventListener('click', playMusicOnce);
+// Run on page load
+window.addEventListener("load", () => {
+  checkInstalledCookie();
 });
 
 // Enter button
-enterBtn.addEventListener('click', ()=>{
-  window.location.href='home.html';
+enterBtn.addEventListener('click', () => {
+  window.location.href = 'home.html';
 });
 
-// Service worker
+// Register service worker
 if('serviceWorker' in navigator){
   navigator.serviceWorker.register('sw.js').then(()=>console.log('Service Worker registered'));
 }
 </script>
+
 </body>
 </html>
+

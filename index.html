@@ -735,15 +735,7 @@
     }
   });
 
-const bgVideo = document.getElementById("bg");
-
-  // Ensure it keeps looping endlessly
-  bg.addEventListener("ended", () => {
-    bg.currentTime = 0;
-    bg.play();
-  });
-
-// Clock JS (updates every second)
+  // Clock JS (updates every second)
   // Analogue clock logic
 const hourHand = document.getElementById("hourHand");
 const minuteHand = document.getElementById("minuteHand");

@@ -402,48 +402,52 @@
 }
 
     /* Glass Slide */
+/* Glass Slide Container */
 .glass-slide {
-  position: absolute;
-  top: 490px; /* ⬅️ placed below Glyph + Soul Chemistry */
-  left: 25px; /* align with glyph left edge */
-  width: 310px; /* spans from glyph → soul chemistry */
-  height: 155px; /* adjust as needed */
+  position: relative;
+  width: 300px;   /* adjust as needed */
+  height: 180px;  /* adjust as needed */
   border-radius: 24px;
-  background: rgba(255, 255, 255, 0.12);
-  backdrop-filter: blur(16px) saturate(160%);
-  border: 1px solid rgba(255, 255, 255, 0.28);
-  box-shadow: 0 8px 25px rgba(0,0,0,0.35),
-              inset 0 1px 4px rgba(255,255,255,0.15);
   overflow: hidden;
-  z-index: 5;
   display: flex;
   align-items: center;
   justify-content: center;
 }
 
-/* Image inside the glass slide */
+/* Background image (blurred) */
 .glass-slide img {
+  position: absolute;
+  inset: 0;
   width: 100%;
   height: 100%;
   object-fit: cover;
-  opacity: 0.25; /* black-transparent look */
-  border-radius: 24px;
-  filter: brightness(0.5) contrast(1); /* darkens image while keeping details */
+  filter: blur(12px) brightness(0.6); /* blur + darken for contrast */
+  z-index: 0;
 }
 
-.glass-slide {
-  position: relative;
-  overflow: hidden;
-  border-radius: 24px;
-}
-
-.glass-slide::after {
+/* Foreground Glass Layer */
+.glass-slide::before {
   content: "";
   position: absolute;
   inset: 0;
-  background: rgba(0,0,0,0.45); /* black overlay for more darkness */
-  pointer-events: none;
+  background: rgba(255,255,255,0.12); /* transparent white */
+  backdrop-filter: blur(16px) saturate(180%);
+  -webkit-backdrop-filter: blur(16px) saturate(180%);
+  border-radius: 24px;
+  border: 1px solid rgba(255,255,255,0.25);
+  z-index: 1;
 }
+
+/* Glass Content (on top) */
+.glass-content {
+  position: relative;
+  z-index: 2;
+  color: #fff;
+  font-size: 14px;
+  text-align: center;
+  padding: 12px;
+}
+
 
 
   </style>
@@ -521,8 +525,12 @@
 
 <!-- Glass Slide -->
 <div class="glass-slide">
-  <img src="istockphoto-2153823097-612x612.jpg" alt="Glass Slide Image" />
+  <img src="istockphoto-2153823097-612x612.jpg" alt="Background Image">
+  <div class="glass-content">
+    <p>✨ This is your glass morphism slide</p>
+  </div>
 </div>
+
 
     <!-- bottom content (home screen) -->
 <div class="content-bottom" id="homeContent"> 

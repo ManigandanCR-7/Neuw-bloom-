@@ -135,18 +135,6 @@ body {
   opacity: 0.7;
 }
 
-/* Fade-in and fade-out animation for overlay */
-@keyframes fadeOutOverlay {
-  0%   { opacity: 1; }
-  90%  { opacity: 1; }
-  100% { opacity: 0; }
-}
-
-.fade-out {
-  animation: fadeOutOverlay 10s forwards;
-}
-
-
 </style>
 </head>
 <body>
@@ -251,21 +239,21 @@ let deferredPrompt;
         installOverlay.style.display = "none";
         successOverlay.style.display = "flex";
 
-        // Add fade-out animation
-        successOverlay.classList.add('fade-out');
-
-        // After 10s, hide overlay and show home
+        // Fade out success overlay in 10s
         setTimeout(() => {
           successOverlay.style.display = "none";
-          successOverlay.classList.remove('fade-out');
-          showHome();
-        }, 10000); // 10 seconds
+          // The splash-content with enter button is already visible
+        }, 10000); 
       }
       deferredPrompt = null;
     });
   }
 });
-
+  
+enterBtn.addEventListener('click', () => {
+    // Navigate to home page
+    window.location.href = 'home.html';
+});
   
 
  if ('serviceWorker' in navigator) {
@@ -276,4 +264,4 @@ let deferredPrompt;
 </script>
 
 </body>
-</html>
+</html> 

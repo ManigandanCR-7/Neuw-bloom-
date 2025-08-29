@@ -612,7 +612,7 @@
 
   <div class="glass-content" id="glassContent" style="display: none;">
     <div class="small-text">Next care begins at</div>
-    <div class="timer" id="timer">40 mins more</div>
+    <div class="timer" id="timer">40 mins </div>
     <div class="quote twinkle">* work * meditate * sip water * walk 10 mins *</div>
   </div>
 </div>
@@ -813,9 +813,9 @@ function startCare() {
   }
 
 let timers = [
-  { duration: 2 * 60 }, // 40 mins
-  { duration: 2 * 60 }, // 10 mins after 1st
-  { duration: 2 * 60 }  // example 20 mins for 3rd
+  { duration: 40 * 60 }, // 40 mins
+  { duration: 10 * 60 }, // 10 mins after 1st
+  { duration: 10* 60 }  // example 20 mins for 3rd
 ];
 
 let currentTimer = 0;

@@ -598,7 +598,9 @@
   <!-- Overlay -->
   <div class="time-overlay" id="timeOverlay">
     <button class="start-btn" onclick="startCare()">Start your care</button>
-  </div>
+  </div> 
+
+  <audio id="startSound" src="ui-click-43196.mp3" preload="auto"></audio>
 
   <!-- Actual Content -->
   <div class="glass-content" id="glassContent" style="display:none;">
@@ -773,9 +775,18 @@ setInterval(cycleGlyphs, 3000); // change every 3s
 
 
 function startCare() {
-  document.getElementById("timeOverlay").style.display = "none";
-  document.getElementById("glassContent").style.display = "block";
-}
+    // Hide overlay
+    document.getElementById("timeOverlay").style.display = "none";
+    // Show content
+    document.getElementById("glassContent").style.display = "block";
+
+    // Play sound instantly
+    let sound = document.getElementById("startSound");
+    sound.currentTime = 0; // reset to start
+    sound.play().catch(err => console.log("Audio blocked until user interaction:", err));
+
+    // (Timer logic can continue here if needed…)
+  }
 
 
 let timers = [

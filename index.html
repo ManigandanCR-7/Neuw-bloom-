@@ -433,6 +433,38 @@
   padding: 12px;
 }
 
+  /* Small text */
+.small-text {
+  font-size: 12px;
+  opacity: 0.8;
+  margin-bottom: 6px;
+}
+
+/* Timer styling */
+.timer {
+  font-size: 28px;
+  font-weight: bold;
+  letter-spacing: 2px;
+  margin: 8px 0;
+}
+
+/* Quote line with twinkle animation */
+.quote {
+  font-size: 14px;
+  margin-top: 10px;
+  opacity: 0.9;
+}
+
+.twinkle {
+  animation: twinkle 2s infinite alternate;
+}
+
+@keyframes twinkle {
+  0%   { opacity: 0.6; }
+  50%  { opacity: 1;   }
+  100% { opacity: 0.6; }
+}
+
   </style>
 </head>
 <body>
@@ -509,10 +541,11 @@
 <!-- Glass Slide -->
 <div class="glass-slide">
   <div class="glass-content">
-    <p>✨ This is your glass morphism slide</p>
+    <div class="small-text">Next care begins at</div>
+    <div class="timer" id="timer">40:00</div>
+    <div class="quote twinkle">* work * meditate * sip water * walk for 10 min *</div>
   </div>
 </div>
-
 
     <!-- bottom content (home screen) -->
 <div class="content-bottom" id="homeContent"> 
@@ -677,8 +710,45 @@ function cycleGlyphs() {
 cycleGlyphs();
 setInterval(cycleGlyphs, 3000); // change every 3s
 
+<script>
+let timers = [
+  { duration: 40 * 60 }, // 40 mins
+  { duration: 10 * 60 }, // 10 mins after 1st
+  { duration: 20 * 60 }  // example 20 mins for 3rd (change as you like)
+];
 
+let currentTimer = 0;
+let timeLeft = timers[currentTimer].duration;
+const timerEl = document.getElementById("timer");
 
+function updateTimer() {
+  let minutes = Math.floor(timeLeft / 60);
+  let seconds = timeLeft % 60;
+  timerEl.textContent = `${minutes}:${seconds < 10 ? "0" : ""}${seconds}`;
+}
+
+function runTimer() {
+  updateTimer();
+  let interval = setInterval(() => {
+    if (timeLeft > 0) {
+      timeLeft--;
+      updateTimer();
+    } else {
+      clearInterval(interval);
+      currentTimer++;
+      if (currentTimer < timers.length) {
+        timeLeft = timers[currentTimer].duration;
+        runTimer();
+      } else {
+        timerEl.textContent = "✅ Done";
+      }
+    }
+  }, 1000);
+}
+
+// Start first timer
+runTimer();
+</script>
 
 // Music toggle logic
 musicToggle.addEventListener('click', () => {

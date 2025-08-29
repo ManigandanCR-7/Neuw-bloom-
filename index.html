@@ -792,6 +792,13 @@ cycleGlyphs();
 setInterval(cycleGlyphs, 3000); // change every 3s
 
 function startCare() {
+
+    const music = document.getElementById("bgMusic");
+
+  // Play the music in a loop
+    music.play().catch(err => {
+    console.log("Playback failed:", err);
+    });
     // Hide overlay
     document.getElementById("timeOverlay").style.display = "none";
     // Show content

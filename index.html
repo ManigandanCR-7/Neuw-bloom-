@@ -74,7 +74,6 @@ body {
   justify-content: center;
   align-items: center;
   z-index: 20;
-  display: none; /* hide all overlays by default */
 }
 
 .overlay-card {
@@ -140,6 +139,17 @@ body {
   font-size: 12px;
   opacity: 0.7;
 }
+
+/* Fade-out animation */
+.fade-out {
+  animation: fadeOutOverlay 10s forwards;
+}
+
+@keyframes fadeOutOverlay {
+  0% { opacity: 1; }
+  90% { opacity: 1; }
+  100% { opacity: 0; }
+}
 </style>
 </head>
 <body>
@@ -155,19 +165,51 @@ body {
   </div>
 </div>
 
+<!-- Install Overlay -->
+<div class="overlay" id="installOverlay">
+  <div class="overlay-card">
+    <h4>Install Neuw-Bloom</h4>
+    <p>Experience seamless access from your home screen.</p>
+    <button id="installBtn">Install App</button>
+  </div>
+</div>
+
 <!-- Success Overlay -->
-<div class="overlay" id="successOverlay">
+<div class="overlay" id="successOverlay" style="display:none;">
   <div class="overlay-card">
     <h4>🎉 Installed</h4>
     <p>Check your home screen — Neuw-Bloom is ready!</p>
   </div>
 </div>
 
+<!-- Desktop Overlay -->
+<div class="overlay" id="desktopOverlay" style="display:none;">
+  <div class="overlay-card">
+    <h4>Mobile Only</h4>
+    <p>You can view our app only on your mobile. <br/> Kindly visit this link through your phone.</p>
+  </div>
+</div>
+
 <script>
+const installOverlay = document.getElementById('installOverlay');
 const successOverlay = document.getElementById('successOverlay');
+const desktopOverlay = document.getElementById('desktopOverlay');
+const installBtn = document.getElementById('installBtn');
 const enterBtn = document.getElementById('enterBtn');
 
 let deferredPrompt;
+
+// Helper: Set/Get Cookie
+function setCookie(name, value, days) {
+  const date = new Date();
+  date.setTime(date.getTime() + (days*24*60*60*1000));
+  document.cookie = name + "=" + value + "; expires=" + date.toUTCString() + "; path=/";
+}
+
+function getCookie(name) {
+  const match = document.cookie.match(new RegExp('(^| )' + name + '=([^;]+)'));
+  return match ? match[2] : null;
+}
 
 // Check Mobile
 function isMobile() {
@@ -179,18 +221,38 @@ function isStandalone() {
   return window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true;
 }
 
-// Show splash page (icon page)
+// Show splash page immediately
 function showSplashPage() {
-  successOverlay.style.display = "none"; // hide any overlay
+  installOverlay.style.display = "none";
+  desktopOverlay.style.display = "none";
+  successOverlay.style.display = "none";
 }
 
-// Show installed message briefly
+// Show “installed” message briefly
 function showInstalledMessage() {
   successOverlay.style.display = "flex";
   setTimeout(() => {
-    showSplashPage();
-  }, 4000); // show 4s
+    successOverlay.style.display = "none";
+  }, 4000); // show 4 seconds
 }
+
+// On page load
+window.addEventListener('load', () => {
+  // Desktop users
+  if(!isMobile()){
+    desktopOverlay.style.display = "flex";
+    installOverlay.style.display = "none";
+    return;
+  }
+
+  // Mobile PWA users
+  if(getCookie("pwa_installed") === "true" || isStandalone()){
+    showSplashPage(); // immediately show icon page
+    if(!isStandalone()) showInstalledMessage(); // if just installed via website
+  } else {
+    installOverlay.style.display = "flex"; // show install overlay
+  }
+});
 
 // Before install prompt
 window.addEventListener('beforeinstallprompt', (e) => {
@@ -198,24 +260,26 @@ window.addEventListener('beforeinstallprompt', (e) => {
   deferredPrompt = e;
 });
 
-// Enter button click
-enterBtn.addEventListener('click', () => {
-  window.location.href = 'home.html';
-});
-
-// Handle installation via prompt
-async function handleInstall() {
+// Install button
+installBtn.addEventListener('click', async () => {
   if(deferredPrompt){
     deferredPrompt.prompt();
     const choice = await deferredPrompt.userChoice;
     if(choice.outcome === 'accepted'){
-      showInstalledMessage(); // show success overlay 4s
+      setCookie("pwa_installed", "true", 365);
+      showSplashPage();
+      showInstalledMessage();
     }
     deferredPrompt = null;
   }
-}
+});
 
-// Optional: register service worker
+// Enter button
+enterBtn.addEventListener('click', () => {
+  window.location.href = 'home.html';
+});
+
+// Register Service Worker
 if('serviceWorker' in navigator){
   navigator.serviceWorker.register('sw.js').then(()=>console.log('Service Worker registered'));
 }
@@ -223,3 +287,4 @@ if('serviceWorker' in navigator){
 
 </body>
 </html>
+

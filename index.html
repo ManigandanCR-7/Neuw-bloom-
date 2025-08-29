@@ -135,6 +135,18 @@ body {
   opacity: 0.7;
 }
 
+/* Fade-in and fade-out animation for overlay */
+@keyframes fadeOutOverlay {
+  0%   { opacity: 1; }
+  90%  { opacity: 1; }
+  100% { opacity: 0; }
+}
+
+.fade-out {
+  animation: fadeOutOverlay 10s forwards;
+}
+
+
 </style>
 </head>
 <body>
@@ -232,28 +244,28 @@ let deferredPrompt;
   });
 
   installBtn.addEventListener('click', () => {
-    if (deferredPrompt) {
-      deferredPrompt.prompt();
-      deferredPrompt.userChoice.then(choice => {
-        if (choice.outcome === 'accepted') {
-          installOverlay.style.display = "none";
-          successOverlay.style.display = "flex";
-          
-          // Show success for 20s then switch to home
-          setTimeout(() => {
-            successOverlay.style.display = "none";
-            showHome();
-          }, 20000); 
-        }
-        deferredPrompt = null;
-      });
-    }
-  });
+  if (deferredPrompt) {
+    deferredPrompt.prompt();
+    deferredPrompt.userChoice.then(choice => {
+      if (choice.outcome === 'accepted') {
+        installOverlay.style.display = "none";
+        successOverlay.style.display = "flex";
 
-enterBtn.addEventListener('click', () => {
-    // Navigate to home page
-    window.location.href = 'home.html';
+        // Add fade-out animation
+        successOverlay.classList.add('fade-out');
+
+        // After 10s, hide overlay and show home
+        setTimeout(() => {
+          successOverlay.style.display = "none";
+          successOverlay.classList.remove('fade-out');
+          showHome();
+        }, 10000); // 10 seconds
+      }
+      deferredPrompt = null;
+    });
+  }
 });
+
   
 
  if ('serviceWorker' in navigator) {

@@ -4,6 +4,7 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Neuw-Bloom</title>
+  <link rel="manifest" href="manifest.json" />
   <meta name="theme-color" content="#0f172a" />
   <style>
     :root {
@@ -104,7 +105,56 @@
     .overlay-card button:hover {
       background: rgba(255,255,255,0.25);
     }
+/* Music Toggle Button */
+.music-toggle {
+  position: absolute;
+  top: 14px;
+  right: 14px;
+  z-index: 6;
+  width: 42px;   /* smaller size */
+  height: 42px;  /* smaller size */
+  border-radius: 50%;
+  border: 1px solid rgba(255,255,255,0.25);
+  background: rgba(255,255,255,0.12);
+  backdrop-filter: blur(14px) saturate(180%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  font-size: 18px;   /* smaller icon size */
+  color: #fff;
+  box-shadow: 0 3px 10px rgba(0,0,0,0.25), inset 0 1px 2px rgba(255,255,255,0.2);
+  transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+  overflow: hidden;
+  display: none; /* hidden until home */
+}
 
+/* Hover interaction */
+.music-toggle:hover {
+  transform: scale(1.08);
+  background: rgba(255,255,255,0.22);
+  box-shadow: 0 5px 14px rgba(0,0,0,0.3), inset 0 1px 3px rgba(255,255,255,0.3);
+}
+
+/* Active state (music ON) */
+.music-toggle.active {
+  background: rgba(255, 255, 255, 0.18); /* subtle white background */
+  border-color: rgba(255, 255, 255, 0.6);
+  transform: scale(1.05);
+}
+
+    /* Remove default mobile tap highlight */
+* {
+  -webkit-tap-highlight-color: transparent;
+  -webkit-touch-callout: none;
+}
+    
+.music-toggle {
+  -webkit-tap-highlight-color: transparent;
+  outline: none;
+}
+    /* Clock Widget */
+/* Analogue Clock Widget */
 /* Clock Widget Container */
 .clock-widget {
   position: absolute;
@@ -543,6 +593,15 @@
     </video>
     <div class="back-overlay"></div>
 
+    <div id="splashOverlay">
+    <img src="512 (6).png" alt="App Icon">
+    <button id="enterBtn">Click to Enter</button>
+    </div>
+    <!-- background music -->
+    <audio id="bgMusic" loop>
+      <source src="Sound of a mountain river and the singing of birds. 10 minutes for meditation and relaxation..mp3" type="audio/mp3" />
+    </audio>
+
 
     <!-- Analogue Clock Widget -->
 <!-- Analogue Clock Widget -->
@@ -603,17 +662,10 @@
 
 <div class="glass-slide">
   <!-- Overlay -->
-<!-- Music audio element -->
-<audio id="backgroundMusic" loop>
-  <source src="Sound of a mountain river and the singing of birds. 10 minutes for meditation and relaxation..mp3" type="audio/mpeg">
-</audio>
+  <div class="time-overlay" id="timeOverlay">
+    <button class="start-btn" onclick="startCare()">Start your care</button>
+  </div>
 
-<!-- Overlay -->
-<div class="time-overlay" id="timeOverlay">
-  <button class="start-btn" onclick="startCare()">Start your care</button>
-</div>
-
-  
   <div class="glass-content" id="glassContent" style="display: none;">
     <div class="small-text">Next care begins at</div>
     <div class="timer" id="timer">40 mins more</div>
@@ -636,12 +688,33 @@
 
 <audio id="btnClickSound" src="computer-mouse-click-351398.mp3" preload="auto"></audio>
 
+    <!-- Music Toggle Button -->
+    <div class="music-toggle" id="musicToggle">🔇</div>
+
+    <!-- Install Overlay (Step 1) -->
+    <div class="overlay" id="installOverlay">
+      <div class="overlay-card">
+        <h4>Install Neuw-Bloom</h4>
+        <p>Experience seamless access from your home screen.</p>
+        <button id="installBtn">Install App</button>
+      </div>
+    </div>
+
+    <!-- Success Overlay (Step 2) -->
+    <div class="overlay" id="successOverlay" style="display:none;">
+      <div class="overlay-card">
+        <h4>🎉 Installed</h4>
+        <p>Check your home screen — Neuw-Bloom is ready!</p>
+      </div>
+    </div>
 
 
 
     <!-- Desktop Only Overlay -->
     <div class="overlay" id="desktopOverlay" style="display:none;">
       <div class="overlay-card">
+        <h4>Mobile Only</h4>
+        <p>You can view our app only on your mobile. <br/> Kindly visit this link through your phone.</p>
       </div>
     </div>
   </div>
@@ -793,13 +866,6 @@ cycleGlyphs();
 setInterval(cycleGlyphs, 3000); // change every 3s
 
 function startCare() {
-
-    const music = document.getElementById('backgroundMusic');
-  
-  // Play music
-    music.play().catch(err => {
-    console.log("Autoplay blocked, user interaction required.", err);
-    });
     // Hide overlay
     document.getElementById("timeOverlay").style.display = "none";
     // Show content
@@ -882,7 +948,20 @@ buttons.forEach(btn => {
 });
 
 // Music toggle logic
-
+musicToggle.addEventListener('click', () => {
+  if (!musicOn) {
+    bgMusic.play().then(() => {
+      musicOn = true;
+      musicToggle.textContent = "🎵";
+      musicToggle.classList.add("active"); // glow effect
+    }).catch(err => console.log("Play error:", err));
+  } else {
+    bgMusic.pause();
+    musicOn = false;
+    musicToggle.textContent = "🔇";
+    musicToggle.classList.remove("active");
+  }
+});
 
 
   showCorrectUI();

@@ -1,0 +1,976 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Neuw-Bloom</title>
+  <link rel="manifest" href="manifest.json" />
+  <meta name="theme-color" content="#0f172a" />
+  <style>
+    :root {
+      --frame-w: 375px;
+      --frame-h: 720px;
+      font-family: Inter, system-ui, -apple-system, "Segoe UI", Roboto, Arial;
+    }
+    body {
+      margin: 0;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: linear-gradient(180deg,#0f172a 0%, #071029 100%);
+      color: #fff;
+    }
+    
+    .phone {
+      width: var(--frame-w);
+      height: var(--frame-h);
+      border-radius: 32px;
+      overflow: hidden;
+      position: relative;
+      border: 1px solid rgba(255,255,255,0.08);
+      background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
+    }
+
+    /* Splash page styling */
+ /* Splash Overlay */
+  
+    .phone video.bg {
+      position:absolute;
+      inset:0;
+      width:100%;
+      height:100%;
+      object-fit:cover;
+      z-index:0;
+    }
+    .phone .back-overlay {
+      position:absolute; inset:0; z-index:1;
+      background: linear-gradient(180deg, rgba(0,0,0,0.18) 0%, rgba(0,0,0,0.4) 70%);
+    }
+    /* Bottom Home Content */
+    .content-bottom {
+      position:absolute;
+      z-index:5;
+      bottom:20px;
+      left:20px;
+      right:20px;
+      text-align:center;
+      color: rgba(255,255,255,0.95);
+      font-size:14px;
+      display: none; /* hidden until installed */
+    }
+    /* Fullscreen Overlay Base */
+    .overlay {
+      position: absolute;
+      inset: 0;
+      backdrop-filter: blur(20px) saturate(180%);
+      background: rgba(0,0,0,0.4);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 20;
+    }
+    .overlay-card {
+      background: rgba(255,255,255,0.1);
+      backdrop-filter: blur(16px) saturate(160%);
+      border: 1px solid rgba(255,255,255,0.25);
+      padding: 24px;
+      border-radius: 20px;
+      text-align: center;
+      max-width: 280px;
+      box-shadow: 0 8px 30px rgba(0,0,0,0.4);
+      animation: fadeIn 0.5s ease;
+    }
+    .overlay-card h4 {
+      margin: 0 0 10px;
+      font-size: 18px;
+      font-weight: 600;
+    }
+    .overlay-card p {
+      margin: 0 0 16px;
+      font-size: 13px;
+      opacity: 0.9;
+    }
+    .overlay-card button {
+      border: 1px solid rgba(255,255,255,0.3);
+      background: rgba(255,255,255,0.15);
+      backdrop-filter: blur(10px);
+      color: #fff;
+      padding: 10px 18px;
+      border-radius: 16px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+    .overlay-card button:hover {
+      background: rgba(255,255,255,0.25);
+    }
+/* Music Toggle Button */
+.music-toggle {
+  position: absolute;
+  top: 14px;
+  right: 14px;
+  z-index: 6;
+  width: 42px;   /* smaller size */
+  height: 42px;  /* smaller size */
+  border-radius: 50%;
+  border: 1px solid rgba(255,255,255,0.25);
+  background: rgba(255,255,255,0.12);
+  backdrop-filter: blur(14px) saturate(180%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  font-size: 18px;   /* smaller icon size */
+  color: #fff;
+  box-shadow: 0 3px 10px rgba(0,0,0,0.25), inset 0 1px 2px rgba(255,255,255,0.2);
+  transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+  overflow: hidden;
+  display: none; /* hidden until home */
+}
+
+/* Hover interaction */
+.music-toggle:hover {
+  transform: scale(1.08);
+  background: rgba(255,255,255,0.22);
+  box-shadow: 0 5px 14px rgba(0,0,0,0.3), inset 0 1px 3px rgba(255,255,255,0.3);
+}
+
+/* Active state (music ON) */
+.music-toggle.active {
+  background: rgba(255, 255, 255, 0.18); /* subtle white background */
+  border-color: rgba(255, 255, 255, 0.6);
+  transform: scale(1.05);
+}
+
+    /* Remove default mobile tap highlight */
+* {
+  -webkit-tap-highlight-color: transparent;
+  -webkit-touch-callout: none;
+}
+    
+.music-toggle {
+  -webkit-tap-highlight-color: transparent;
+  outline: none;
+}
+    /* Clock Widget */
+/* Analogue Clock Widget */
+/* Clock Widget Container */
+.clock-widget {
+  position: absolute;
+  top: 95px; /* space below music button */
+  right: 14px;
+  width: 110px;   /* smaller */
+  height: 110px;  /* smaller */
+  border-radius: 50%;
+  background: rgba(0, 0, 0, 0.6); /* black glass */
+  backdrop-filter: blur(14px) saturate(160%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 6;
+  display: none; /* hidden until home */
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.5),
+              inset 0 1px 4px rgba(255, 255, 255, 0.1);
+}
+
+/* Clock Face */
+.clock-face {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+}
+
+/* Hour & Minute Hands */
+.hand {
+  position: absolute;
+  left: 50%;
+  bottom: 50%;
+  transform-origin: bottom center;
+  transform: translateX(-50%) rotate(0deg);
+  border-radius: 2px;
+  z-index: 2; /* keep hands above dotted ring */
+}
+
+.hand.hour {
+  width: 3px;
+  height: 28px; /* reduced for smaller clock */
+  border: 2px dotted rgb(255, 255, 255);
+  background: rgb(255, 255, 255);
+}
+
+.hand.minute {
+  width: 2.5px;
+  height: 36px; /* reduced for smaller clock */
+  border: 2px dotted rgb(255, 255, 255);
+  background: rgb(255, 255, 255);
+}
+
+/* Dotted Ring */
+.clock-dots {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  z-index: 1;
+}
+
+.clock-dots::before {
+  content: "";
+  position: absolute;
+  inset: 8px; /* shrink proportionally */
+  border-radius: 50%;
+  border: 2px dotted rgb(255, 255, 255);
+  background: transparent;
+}
+
+/* Welcome Note */
+.welcome-note {
+  position: absolute;
+  top: 75px;        
+  left: 14px;        
+  width: 175px; 
+  height: 129px;/* ⬅️ bigger width for ticker space */
+  padding: 20px;         
+  border-radius: 32px;
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(14px) saturate(180%);
+  border: 1px solid rgba(255, 255, 255, 0.28);
+  color: #fff;
+  z-index: 6;
+  display: none; 
+  box-shadow: 0 8px 24px rgba(0,0,0,0.4),
+              inset 0 1px 4px rgba(255,255,255,0.18);
+  font-size: 15px;
+  line-height: 1.6;
+}
+
+/* Text styles */
+.welcome-note .small-line {
+  font-size: 12px;
+  opacity: 0.8;
+  margin: 0 0 16px;
+}
+
+.welcome-note .big-line {
+  font-size: 30px;
+  font-weight: 700;
+  margin: 0 0 22px;
+}
+
+/* Container for ticker */
+.welcome-note .quote-container {
+  position: relative;
+  width: 100%;             /* fill welcome note */
+  overflow: hidden;        /* hide overflow text */
+  height: 18px; 
+  margin: 0 0 22px;/* fixed height for one line */
+}
+
+/* Scrolling ticker text */
+.welcome-note .quote-line {
+  font-size: 13px;
+  font-style: italic;
+  white-space: nowrap;
+  display: inline-block;
+  padding-left: 100%;      /* push start to the right */
+  animation: ticker 12s linear infinite;
+}
+
+/* Ticker animation (right → left) */
+@keyframes ticker {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-100%);
+  }
+}
+.soul-chemistry {
+  position: absolute;
+  top: 275px; 
+  right: 14px;
+  width: 175px; 
+  height: 200px; /* increased height for taller tubes */
+  border-radius: 32px;
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(14px) saturate(180%);
+  border: 1px solid rgba(255, 255, 255, 0.28);
+  box-shadow: 0 8px 24px rgba(0,0,0,0.4),
+              inset 0 1px 4px rgba(255,255,255,0.18);
+  z-index: 6;
+}
+
+/* Tube wrapper: horizontal alignment */
+.soul-chemistry .tube-wrapper {
+  position: absolute;
+  bottom: 32px; 
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  justify-content: space-between;
+  width: 120px; 
+  height: 130px; /* taller tube height */
+}
+
+/* Individual tube container */
+.soul-chemistry .tube-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* Tube shape */
+.soul-chemistry .tube {
+  position: relative;
+  width: 18px;      
+  height: 100%;     
+  background: #000;  
+  border-radius: 9px;
+  overflow: hidden;
+  display: flex;
+  align-items: flex-end; /* liquid fills from bottom */
+}
+
+/* Liquid inside tube */
+.soul-chemistry .tube .liquid {
+  width: 100%;
+  border-radius: 8px 8px 0 0; /* top rounded */
+}
+
+/* Tube labels (D, S, O) */
+.soul-chemistry .tube-label {
+  font-size: 12px;
+  color: #fff;
+  opacity: 0.9;
+  margin-top: 6px;
+}
+
+/* Bottom statement */
+.soul-chemistry .statement {
+  font-size: 12px;
+  opacity: 0.8;
+  position: absolute;
+  bottom: 6px;
+  left: 50%;
+  transform: translateX(-50%);
+  text-align: center;
+}
+    /* Glyph Matrix Container */
+.glyph-matrix {
+  position: absolute;
+  top: 310px; /* aligned with Soul Chemistry top */
+  left: 22px; /* place on left side */
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  background: rgba(0,0,0,0.6);
+  backdrop-filter: blur(14px) saturate(160%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 6;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.5),
+              inset 0 1px 4px rgba(255,255,255,0.1);
+  overflow: hidden;
+}
+
+/* Glyph icon */
+.glyph {
+  position: absolute;
+  font-size: 32px;
+  opacity: 0;
+  transform: scale(0.9);
+  transition: all 0.8s ease;
+}
+
+/* Active glyph */
+.glyph.active {
+  opacity: 1;
+  transform: scale(1);
+}
+
+/* Glow pulse */
+.glyph.active {
+  text-shadow: 0 0 8px rgba(255,255,255,0.7),
+               0 0 15px rgba(255,255,255,0.4);
+}
+
+
+    /* Glass Slide */
+/* Glass Slide Container */
+.glass-slide {
+  position: relative;
+  top: 475px; 
+  left: 32px;
+  width: 300px;
+  height: 135px;
+  border-radius: 24px;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+ /* Glass Foreground Layer */
+
+.glass-slide::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: rgba(255,255,255,0.25); /* brighter glass */
+  backdrop-filter: blur(16px) saturate(180%);
+  -webkit-backdrop-filter: blur(16px) saturate(180%);
+  border-radius: 24px;
+  border: 1px solid rgba(255,255,255,0.4);
+  z-index: 1;
+}
+    
+/* Overlay */
+.time-overlay {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 3; /* above glass-content */
+  background: rgba(0,0,0,0.4);
+  backdrop-filter: blur(10px);
+  border-radius: 24px;
+}
+
+
+/* Start Button with 3D effect (white style) */
+.start-btn {
+  padding: 12px 20px;
+  font-size: 16px;
+  font-weight: bold;
+  color: #000; /* black text */
+  background: #fff; /* white button */
+  border: none;
+  border-radius: 12px;
+  box-shadow: 0 6px 0 #bbb, 0 8px 16px rgba(0,0,0,0.15);
+  cursor: pointer;
+  transform: translateY(0);
+  transition: all 0.2s ease-in-out;
+}
+.start-btn:active {
+  transform: translateY(3px);
+  box-shadow: 0 3px 0 #bbb, 0 4px 8px rgba(0,0,0,0.15);
+}
+
+/* Content inside glass */
+.glass-content {
+  position: relative;
+  z-index: 2;
+  color: #fff;
+  font-size: 14px;
+  text-align: center;
+  padding: 12px;
+}
+.small-text {
+  font-size: 12px;
+  opacity: 0.8;
+  margin-bottom: 6px;
+}
+.timer {
+  font-size: 34px;
+  font-weight: bold;
+  letter-spacing: 2px;
+  margin: 8px 0;
+}
+.quote {
+  font-size: 10px;
+  margin-top: 12px;
+  opacity: 0.9;
+}
+.twinkle {
+  display: inline-block;
+  animation: twinkle 2s infinite alternate;
+}
+@keyframes twinkle {
+  0%   { opacity: 0.6; }
+  50%  { opacity: 1; }
+  100% { opacity: 0.6; }
+}
+
+.glass-btn-row {
+  margin-top: 14px;
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;  /* spacing between buttons */
+}
+.glass-round-btn {
+  width: 60px; 
+  height: 60px;
+  border-radius: 50%;
+  font-size: 26px;
+  color: #fff;  /* default white */
+  background: rgba(255,255,255,0.12);
+  border: 1px solid rgba(255,255,255,0.25);
+  backdrop-filter: blur(12px) saturate(180%);
+  -webkit-backdrop-filter: blur(12px) saturate(180%);
+  cursor: pointer;
+  box-shadow: 0 6px 12px rgba(0,0,0,0.3),
+              inset 0 1px 2px rgba(255,255,255,0.2);
+  transition: all 0.25s ease-in-out;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.glass-round-btn:hover {
+  background: rgba(255,255,255,0.2);
+}
+
+.glass-round-btn:active {
+  transform: scale(0.9);
+}
+
+/* Toggled (clicked) state → Black */
+.glass-round-btn.active {
+  color: #000;
+  background: rgba(255,255,255,0.85);
+  box-shadow: 0 4px 8px rgba(0,0,0,0.25);
+}
+/* Splash Overlay */
+  #splashOverlay {
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    background: linear-gradient(180deg, #1c1c3a, #071029);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 30px;
+    z-index: 10;
+    transition: opacity 0.6s ease;
+  }
+
+  #splashOverlay img {
+    width: 120px;
+    height: 120px;
+  }
+
+  #enterBtn {
+    padding: 16px 32px;
+    font-size: 18px;
+    font-weight: bold;
+    border-radius: 16px;
+    border: none;
+    cursor: pointer;
+    background: #fff;
+    color: #000;
+    box-shadow: 0 6px 12px rgba(0,0,0,0.3);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+  }
+  #enterBtn:active {
+    transform: translateY(3px);
+    box-shadow: 0 3px 6px rgba(0,0,0,0.3);
+  }
+
+  /* Existing Glass Content (hidden initially) */
+  .glass-content {
+    position: relative;
+    z-index: 1;
+    color: #fff;
+    font-size: 14px;
+    text-align: left;
+    padding: 12px;
+    display: none; /* hidden initially */
+  }
+
+  </style>
+</head>
+<body>
+</div>
+  <div class="phone">
+    <!-- background video -->
+    <video class="bg" autoplay muted loop playsinline>
+      <source src="125314-733046618_small.mp4" type="video/mp4" />
+    </video>
+    <div class="back-overlay"></div>
+
+    <div id="splashOverlay">
+    <img src="512 (6).png" alt="App Icon">
+    <button id="enterBtn">Click to Enter</button>
+    </div>
+    <!-- background music -->
+    <audio id="bgMusic" loop>
+      <source src="Sound of a mountain river and the singing of birds. 10 minutes for meditation and relaxation..mp3" type="audio/mp3" />
+    </audio>
+
+
+    <!-- Analogue Clock Widget -->
+<!-- Analogue Clock Widget -->
+<div class="clock-widget" id="clockWidget">
+  <div class="clock-face">
+    <!-- Hour and Minute Hands -->
+    <div class="hand hour" id="hourHand"></div>
+    <div class="hand minute" id="minuteHand"></div>
+    <!-- Dotted ring generated via CSS -->
+    <div class="clock-dots"></div>
+  </div>
+</div>
+
+<div class="welcome-note" id="welcomeNote">
+  <div class="small-line">Welcome back , </div>
+  <div class="big-line">Neuw-Bloom</div>
+  <div class="quote-container">
+    <div class="quote-line">"Nature heals , the minds bloom"</div>
+  </div>
+</div>
+
+<div class="soul-chemistry" id="soulChemistry">
+  <div class="tube-wrapper">
+    <!-- Tube 1 -->
+    <div class="tube-container">
+      <div class="tube">
+        <div class="liquid" style="height:20%; background: #8e44ad;"></div>
+      </div>
+      <div class="tube-label">D</div>
+    </div>
+    <!-- Tube 2 -->
+    <div class="tube-container">
+      <div class="tube">
+        <div class="liquid" style="height:40%; background: #27ae60;"></div>
+      </div>
+      <div class="tube-label">S</div>
+    </div>
+    <!-- Tube 3 -->
+    <div class="tube-container">
+  <div class="tube">
+    <div class="liquid" style="height:60%; background: #00cfff;"></div>
+  </div>
+  <div class="tube-label">O</div>
+</div>
+  </div>
+  <div class="statement">Soul Chemistry</div>
+</div>
+
+<div class="glyph-wrapper">
+  <div class="glyph-matrix" id="glyphMatrix">
+    <div class="glyph" data-text="Work">💻</div>
+    <div class="glyph" data-text="Meditate">🧘</div>
+    <div class="glyph" data-text="Sip Water">💧</div>
+    <div class="glyph" data-text="Walk">🚶</div>
+  </div>
+  <div class="glyph-caption" id="glyphCaption">Work</div>
+</div>
+
+<div class="glass-slide">
+  <!-- Overlay -->
+  <div class="time-overlay" id="timeOverlay">
+    <button class="start-btn" onclick="startCare()">Start your care</button>
+  </div>
+
+  <div class="glass-content" id="glassContent" style="display: none;">
+    <div class="small-text">Next care begins at</div>
+    <div class="timer" id="timer">40 mins more</div>
+    <div class="quote twinkle">* work * meditate * sip water * walk 10 mins *</div>
+  </div>
+</div>
+
+<!-- Add your sound file -->
+<audio id="startSound" src="ui-click-43196.mp3" preload="auto"></audio>
+
+<div class="content-bottom" id="homeContent"> 
+<!-- Button Row -->
+  <div class="glass-btn-row">
+    <button class="glass-round-btn" data-label="lunch">🍴</button>
+    <button class="glass-round-btn" data-label="meeting">👥</button>
+    <button class="glass-round-btn" data-label="toilet">🚽</button>
+    <button class="glass-round-btn" data-label="sleep">😴</button>
+  </div>
+</div>
+
+<audio id="btnClickSound" src="computer-mouse-click-351398.mp3" preload="auto"></audio>
+
+    <!-- Music Toggle Button -->
+    <div class="music-toggle" id="musicToggle">🔇</div>
+
+    <!-- Install Overlay (Step 1) -->
+    <div class="overlay" id="installOverlay">
+      <div class="overlay-card">
+        <h4>Install Neuw-Bloom</h4>
+        <p>Experience seamless access from your home screen.</p>
+        <button id="installBtn">Install App</button>
+      </div>
+    </div>
+
+    <!-- Success Overlay (Step 2) -->
+    <div class="overlay" id="successOverlay" style="display:none;">
+      <div class="overlay-card">
+        <h4>🎉 Installed</h4>
+        <p>Check your home screen — Neuw-Bloom is ready!</p>
+      </div>
+    </div>
+
+
+
+    <!-- Desktop Only Overlay -->
+    <div class="overlay" id="desktopOverlay" style="display:none;">
+      <div class="overlay-card">
+        <h4>Mobile Only</h4>
+        <p>You can view our app only on your mobile. <br/> Kindly visit this link through your phone.</p>
+      </div>
+    </div>
+  </div>
+
+<script>
+  
+  const installOverlay = document.getElementById('installOverlay');
+  const successOverlay = document.getElementById('successOverlay');
+  const homeContent = document.getElementById('homeContent');
+  const installBtn = document.getElementById('installBtn');
+  const bgMusic = document.getElementById('bgMusic');
+  const desktopOverlay = document.getElementById('desktopOverlay');
+  const musicToggle = document.getElementById('musicToggle');
+  let deferredPrompt;
+  let musicOn = false;
+
+  function isStandalone() {
+    return window.matchMedia('(display-mode: standalone)').matches 
+        || window.navigator.standalone === true;
+  }
+
+  function isMobile() {
+    return /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+  }
+
+  function showHome() {
+    homeContent.style.display = "block";
+    musicToggle.style.display = "flex";
+  }
+
+  function showCorrectUI() {
+    if (!isMobile()) {
+      desktopOverlay.style.display = "flex";
+      installOverlay.style.display = "none";
+      successOverlay.style.display = "none";
+      homeContent.style.display = "none";
+      musicToggle.style.display = "none";
+      return;
+    }
+    desktopOverlay.style.display = "none";
+
+    if (isStandalone()) {
+      installOverlay.style.display = "none";
+      successOverlay.style.display = "none";
+      showHome();
+    } else {
+      homeContent.style.display = "none";
+      installOverlay.style.display = "flex";
+    }
+  }
+
+  window.addEventListener('beforeinstallprompt', (e) => {
+    e.preventDefault();
+    deferredPrompt = e;
+    showCorrectUI();
+  });
+
+  installBtn.addEventListener('click', () => {
+    if (deferredPrompt) {
+      deferredPrompt.prompt();
+      deferredPrompt.userChoice.then(choice => {
+        if (choice.outcome === 'accepted') {
+          installOverlay.style.display = "none";
+          successOverlay.style.display = "flex";
+          
+          // Show success for 20s then switch to home
+          setTimeout(() => {
+            successOverlay.style.display = "none";
+            showHome();
+          }, 20000); 
+        }
+        deferredPrompt = null;
+      });
+    }
+  });
+
+// Clock JS (updates every second)
+  const enterBtn = document.getElementById("enterBtn");
+  const splashOverlay = document.getElementById("splashOverlay");
+  const homeContent = document.getElementById("homeContent");
+  const bgMusic = document.getElementById("bgMusic");
+
+  enterBtn.addEventListener("click", () => {
+    // Fade out splash overlay
+    splashOverlay.style.opacity = "0";
+    setTimeout(() => {
+      splashOverlay.style.display = "none";
+      // Show home content
+      homeContent.style.display = "block";
+      // Play background music instantly
+      bgMusic.play().catch(err => console.log("Autoplay blocked:", err));
+    }, 600);
+  });
+  
+  // Analogue clock logic
+const hourHand = document.getElementById("hourHand");
+const minuteHand = document.getElementById("minuteHand");
+  
+function updateClock() {
+  const now = new Date();
+  const hour = now.getHours() % 12;
+  const minute = now.getMinutes();
+
+  const hourDeg = (hour + minute/60) * 30;  // 360/12 = 30
+  const minuteDeg = minute * 6;             // 360/60 = 6
+
+  document.getElementById('hourHand').style.transform =
+    `translateX(-50%) rotate(${hourDeg}deg)`;
+  document.getElementById('minuteHand').style.transform =
+    `translateX(-50%) rotate(${minuteDeg}deg)`;
+}
+setInterval(updateClock, 1000);
+updateClock();
+
+  // Show clock when home appears
+function showHome() {
+  homeContent.style.display = "block";
+  musicToggle.style.display = "flex";
+  clockWidget.style.display = "flex"; // 👈 show analogue clock
+}
+  
+ function showHome() {
+  homeContent.style.display = "block";
+  musicToggle.style.display = "flex";
+  clockWidget.style.display = "flex"; 
+  document.getElementById("welcomeNote").style.display = "block"; // 👈 show Welcome Note
+}
+
+  function showHome() {
+  homeContent.style.display = "block";
+  musicToggle.style.display = "flex";
+  clockWidget.style.display = "flex"; 
+  welcomeNote.style.display = "block";      // Welcome note
+  document.getElementById("soulChemistry").style.display = "block"; // Soul Chemistry
+}
+
+  const glyphs = document.querySelectorAll(".glyph");
+const caption = document.getElementById("glyphCaption");
+let index = 0;
+
+function cycleGlyphs() {
+  glyphs.forEach((g, i) => g.classList.remove("active"));
+  glyphs[index].classList.add("active");
+  caption.textContent = glyphs[index].dataset.text;
+  index = (index + 1) % glyphs.length;
+}
+
+cycleGlyphs();
+setInterval(cycleGlyphs, 3000); // change every 3s
+
+function startCare() {
+    // Hide overlay
+    document.getElementById("timeOverlay").style.display = "none";
+    // Show content
+    document.getElementById("glassContent").style.display = "block";
+
+    // Play sound instantly
+    let sound = document.getElementById("startSound");
+    sound.currentTime = 0; // reset to start
+    sound.play().catch(err => console.log("Audio blocked until user interaction:", err));
+
+    // (Timer logic can continue here if needed…)
+  }
+
+let timers = [
+  { duration: 2 * 60 }, // 40 mins
+  { duration: 2 * 60 }, // 10 mins after 1st
+  { duration: 2 * 60 }  // example 20 mins for 3rd
+];
+
+let currentTimer = 0;
+let timeLeft = timers[currentTimer].duration;
+const timerEl = document.getElementById("timer");
+
+function updateTimer() {
+  let minutes = Math.floor(timeLeft / 60);
+  // Handle plural/singular minute
+  if (minutes === 1) {
+    timerEl.textContent = `${minutes} min `;
+  } else {
+    timerEl.textContent = `${minutes} mins `;
+  }
+}
+
+function runTimer() {
+  updateTimer();
+  let interval = setInterval(() => {
+    if (timeLeft > 0) {
+      timeLeft--;
+      // Only update text when a full minute decreases
+      if (timeLeft % 60 === 0) {
+        updateTimer();
+      }
+    } else {
+      clearInterval(interval);
+      currentTimer++;
+      if (currentTimer < timers.length) {
+        timeLeft = timers[currentTimer].duration;
+        runTimer();
+      } else {
+        timerEl.textContent = "✅ Done";
+      }
+    }
+  }, 1000);
+}
+
+// Start first timer
+runTimer();
+
+  // Add toggle effect
+document.querySelectorAll(".glass-round-btn").forEach(btn => {
+  btn.addEventListener("click", () => {
+    btn.classList.toggle("active");
+    // Here you can also stop timers/music
+    console.log("Clicked:", btn.dataset.label);
+  });
+});
+
+const buttons = document.querySelectorAll('.glass-round-btn');
+const clickSound = document.getElementById('btnClickSound');
+
+buttons.forEach(btn => {
+  btn.addEventListener('click', () => {
+    // Play click sound instantly
+    clickSound.currentTime = 0; // reset to start
+    clickSound.play();
+
+    // Optional: toggle active state
+    btn.classList.toggle('active');
+  });
+});
+
+// Music toggle logic
+musicToggle.addEventListener('click', () => {
+  if (!musicOn) {
+    bgMusic.play().then(() => {
+      musicOn = true;
+      musicToggle.textContent = "🎵";
+      musicToggle.classList.add("active"); // glow effect
+    }).catch(err => console.log("Play error:", err));
+  } else {
+    bgMusic.pause();
+    musicOn = false;
+    musicToggle.textContent = "🔇";
+    musicToggle.classList.remove("active");
+  }
+});
+
+
+  showCorrectUI();
+
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('sw.js').then(() => {
+      console.log('Service Worker registered');
+    });
+  }
+</script>
+</body>
+</html>

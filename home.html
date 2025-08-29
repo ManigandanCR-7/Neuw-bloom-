@@ -548,9 +548,9 @@
 
   
     <!-- background music -->
-    <audio id="bgMusic" loop>
-      <source src="Sound of a mountain river and the singing of birds. 10 minutes for meditation and relaxation..mp3" type="audio/mp3" />
-    </audio>
+    <audio id="bgMusic" src="Sound of a mountain river and the singing of birds. 10 minutes for meditation and relaxation..mp3" loop></audio>
+<button id="musicToggle">🎵</button>
+
 
  
 
@@ -883,6 +883,30 @@ musicToggle.addEventListener('click', () => {
 
   showCorrectUI();
 
+</script>
+    <script>
+const bgMusic = document.getElementById('bgMusic');
+const musicToggle = document.getElementById('musicToggle');
+let musicOn = false;
+
+// Check cookie if user already played music
+if(document.cookie.includes("appInstalled=true")){
+  bgMusic.play().then(()=>{ musicOn=true; }).catch(err=>console.log(err));
+}
+
+// Toggle logic
+musicToggle.addEventListener('click', ()=>{
+  if(!musicOn){
+    bgMusic.play().then(()=>{
+      musicOn=true;
+      musicToggle.textContent="🎵";
+    }).catch(err=>console.log(err));
+  } else {
+    bgMusic.pause();
+    musicOn=false;
+    musicToggle.textContent="🔇";
+  }
+});
 </script>
 </body>
 </html>

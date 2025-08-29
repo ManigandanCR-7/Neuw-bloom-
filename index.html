@@ -225,6 +225,74 @@ let deferredPrompt;
     }
   }
 
+  // Helper: Set cookie
+function setCookie(name, value, days) {
+  let expires = "";
+  if (days) {
+    const date = new Date();
+    date.setTime(date.getTime() + days*24*60*60*1000);
+    expires = "; expires=" + date.toUTCString();
+  }
+  document.cookie = name + "=" + (value || "") + expires + "; path=/";
+}
+
+// Helper: Get cookie
+function getCookie(name) {
+  const nameEQ = name + "=";
+  const ca = document.cookie.split(';');
+  for(let i=0;i<ca.length;i++) {
+    let c = ca[i];
+    while (c.charAt(0)==' ') c = c.substring(1,c.length);
+    if (c.indexOf(nameEQ) == 0) return c.substring(nameEQ.length,c.length);
+  }
+  return null;
+}
+
+// Show splash after successful install or if cookie exists
+function showSplashAfterInstall() {
+  // Hide install overlay
+  installOverlay.style.display = "none";
+  // Show success overlay briefly
+  successOverlay.style.display = "flex";
+
+  // Fade out success overlay in 10s
+  setTimeout(() => {
+    successOverlay.style.display = "none";
+    // Splash page (icon + click to enter) is already visible
+  }, 10000); 
+
+  // Remember that user installed app
+  setCookie("pwa_installed", "true", 365);
+}
+
+// Check if user already installed
+function checkInstalledCookie() {
+  if (getCookie("pwa_installed") === "true") {
+    installOverlay.style.display = "none";
+    successOverlay.style.display = "none";
+    // Splash page remains visible
+  }
+}
+
+// Install button
+installBtn.addEventListener('click', () => {
+  if (deferredPrompt) {
+    deferredPrompt.prompt();
+    deferredPrompt.userChoice.then(choice => {
+      if (choice.outcome === 'accepted') {
+        showSplashAfterInstall();
+      }
+      deferredPrompt = null;
+    });
+  }
+});
+
+// Run on page load
+window.addEventListener("load", () => {
+  checkInstalledCookie();
+});
+
+
   window.addEventListener('beforeinstallprompt', (e) => {
     e.preventDefault();
     deferredPrompt = e;

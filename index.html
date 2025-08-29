@@ -490,6 +490,38 @@
   100% { opacity: 0.6; }
 }
 
+    .action-buttons {
+  display: flex;
+  gap: 16px;
+  margin-top: 20px;
+  justify-content: center;
+}
+
+/* Glassmorphism 3D Button */
+.glass-btn {
+  padding: 14px 22px;
+  font-size: 14px;
+  font-weight: bold;
+  color: #fff;
+  background: rgba(255, 255, 255, 0.12);
+  border-radius: 16px;
+  border: 1px solid rgba(255,255,255,0.25);
+  backdrop-filter: blur(12px) saturate(180%);
+  -webkit-backdrop-filter: blur(12px) saturate(180%);
+  cursor: pointer;
+  box-shadow: 0 6px 12px rgba(0,0,0,0.3), inset 0 1px 2px rgba(255,255,255,0.2);
+  transition: all 0.2s ease;
+}
+
+.glass-btn:hover {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+.glass-btn:active {
+  transform: scale(0.96);
+  box-shadow: 0 3px 6px rgba(0,0,0,0.25);
+}
+
 
 
   </style>
@@ -606,6 +638,19 @@
         <p>Check your home screen — Neuw-Bloom is ready!</p>
       </div>
     </div>
+
+    <!-- Buttons Row -->
+<div class="action-buttons">
+  <button class="glass-btn" id="toiletBtn">🚻 Toilet</button>
+  <button class="glass-btn" id="meetingBtn">👥 Meeting</button>
+  <button class="glass-btn" id="lunchBtn">🍴 Lunch</button>
+  <button class="glass-btn" id="sleepBtn">😴 Sleep</button>
+</div>
+
+<!-- Background Music -->
+
+<!-- Click Sound -->
+<audio id="clickSound" src="ui-click-43196.mp3" preload="auto"></audio>
 
     <!-- Desktop Only Overlay -->
     <div class="overlay" id="desktopOverlay" style="display:none;">
@@ -803,7 +848,34 @@ function runTimer() {
 // Start first timer
 runTimer();
 
+let timerInterval; // for stopping timers later
+const bgMusic = document.getElementById("bgMusic");
+const clickSound = document.getElementById("clickSound");
 
+// Helper: stop everything
+function stopAll() {
+  // stop timers
+  if (timerInterval) clearInterval(timerInterval);
+
+  // stop background music
+  bgMusic.pause();
+  bgMusic.currentTime = 0;
+}
+
+// Play click sound in microseconds
+function playClick() {
+  clickSound.currentTime = 0;
+  clickSound.play().catch(err => console.log(err));
+}
+
+// Attach click events
+document.querySelectorAll(".glass-btn").forEach(btn => {
+  btn.addEventListener("click", () => {
+    stopAll();
+    playClick();
+    console.log(`Action: ${btn.textContent} clicked`);
+  });
+});
 // Music toggle logic
 musicToggle.addEventListener('click', () => {
   if (!musicOn) {

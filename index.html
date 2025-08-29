@@ -630,6 +630,7 @@
   </div>
 </div>
 
+<audio id="btnClickSound" src="computer-mouse-click-351398.mp3" preload="auto"></audio>
 
     <!-- Music Toggle Button -->
     <div class="music-toggle" id="musicToggle">🔇</div>
@@ -855,6 +856,20 @@ document.querySelectorAll(".glass-round-btn").forEach(btn => {
     btn.classList.toggle("active");
     // Here you can also stop timers/music
     console.log("Clicked:", btn.dataset.label);
+  });
+});
+
+const buttons = document.querySelectorAll('.glass-round-btn');
+const clickSound = document.getElementById('btnClickSound');
+
+buttons.forEach(btn => {
+  btn.addEventListener('click', () => {
+    // Play click sound instantly
+    clickSound.currentTime = 0; // reset to start
+    clickSound.play();
+
+    // Optional: toggle active state
+    btn.classList.toggle('active');
   });
 });
 

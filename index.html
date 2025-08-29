@@ -409,15 +409,6 @@
 }
 
 /* Background image (blurred) */
-.glass-slide img {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  filter: blur(2px) brightness(1.5); /* blur + darken for contrast */
-  z-index: 0;
-}
 
 /* Foreground Glass Layer */
 .glass-slide::before {
@@ -441,8 +432,6 @@
   text-align: center;
   padding: 12px;
 }
-
-
 
   </style>
 </head>
@@ -519,7 +508,6 @@
 
 <!-- Glass Slide -->
 <div class="glass-slide">
-  <img src="istockphoto-2153823097-612x612.jpg" alt="Background Image">
   <div class="glass-content">
     <p>✨ This is your glass morphism slide</p>
   </div>

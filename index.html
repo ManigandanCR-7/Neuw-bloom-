@@ -534,7 +534,46 @@
   background: rgba(255,255,255,0.85);
   box-shadow: 0 4px 8px rgba(0,0,0,0.25);
 }
+     /* Splash Overlay */
+/* Splash Overlay */
+  #splashOverlay {
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    background: rgba(255,255,255,0.1); /* glass morphism */
+    backdrop-filter: blur(12px) saturate(150%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 30px;
+    z-index: 10;
+    transition: opacity 0.6s ease;
+  }
 
+  #splashOverlay img {
+    width: 120px;
+    height: 120px;
+  }
+
+  /* 3D Green Enter Button */
+  #enterBtn {
+    padding: 16px 36px;
+    font-size: 18px;
+    font-weight: bold;
+    border-radius: 16px;
+    border: none;
+    cursor: pointer;
+    background: linear-gradient(145deg, #28a745, #1e7e34);
+    color: #fff;
+    box-shadow: 0 6px 0 #1c5c28, 0 8px 16px rgba(0,0,0,0.3);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+  }
+  #enterBtn:active {
+    transform: translateY(3px);
+    box-shadow: 0 3px 0 #1c5c28, 0 4px 8px rgba(0,0,0,0.3);
+  }
+    
   </style> 
 </head>
 <body>
@@ -552,6 +591,10 @@
       <source src="Sound of a mountain river and the singing of birds. 10 minutes for meditation and relaxation..mp3" type="audio/mp3" />
     </audio>
 
+    <div id="splashOverlay">
+    <img src="app-icon.png" alt="App Icon">
+    <button id="enterBtn">Click to Enter</button>
+    </div>
 
     <!-- Analogue Clock Widget -->
 <!-- Analogue Clock Widget -->
@@ -670,6 +713,7 @@
   </div>
 
 <script>
+
   
   const installOverlay = document.getElementById('installOverlay');
   const successOverlay = document.getElementById('successOverlay');
@@ -680,6 +724,7 @@
   const musicToggle = document.getElementById('musicToggle');
   let deferredPrompt;
   let musicOn = false;
+  
 
   function isStandalone() {
     return window.matchMedia('(display-mode: standalone)').matches 
@@ -740,7 +785,20 @@
       });
     }
   });
+  
+const enterBtn = document.getElementById("enterBtn");
+  const splashOverlay = document.getElementById("splashOverlay");
+  const bgMusic = document.getElementById("bgMusic");
 
+  enterBtn.addEventListener("click", () => {
+    // Fade out splash overlay
+    splashOverlay.style.opacity = "0";
+    setTimeout(() => {
+      splashOverlay.style.display = "none";
+      // Play background music
+      bgMusic.play().catch(err => console.log("Autoplay blocked:", err));
+    }, 600);
+  });
   // Analogue clock logic
 const hourHand = document.getElementById("hourHand");
 const minuteHand = document.getElementById("minuteHand");

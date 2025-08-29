@@ -489,6 +489,37 @@
   50%  { opacity: 1; }
   100% { opacity: 0.6; }
 }
+    /* Wrapper for spacing */
+.stop-btn-wrapper {
+  margin-top: 24px;   /* gap below glass slide */
+  display: flex;
+  justify-content: center;
+}
+
+/* Glass Morphism Button */
+.stop-btn {
+  padding: 14px 24px;
+  font-size: 16px;
+  font-weight: bold;
+  color: #fff;
+  background: rgba(255, 255, 255, 0.12);
+  border-radius: 16px;
+  border: 1px solid rgba(255,255,255,0.25);
+  backdrop-filter: blur(12px) saturate(180%);
+  -webkit-backdrop-filter: blur(12px) saturate(180%);
+  cursor: pointer;
+  box-shadow: 0 6px 12px rgba(0,0,0,0.3), inset 0 1px 2px rgba(255,255,255,0.2);
+  transition: all 0.2s ease;
+}
+
+.stop-btn:hover {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+.stop-btn:active {
+  transform: scale(0.96);
+  box-shadow: 0 3px 6px rgba(0,0,0,0.25);
+}
 
 
   </style>
@@ -579,6 +610,12 @@
 
 <!-- Add your sound file -->
 <audio id="startSound" src="ui-click-43196.mp3" preload="auto"></audio>
+
+    <!-- Stop Button 1 (Lunch) -->
+<div class="stop-btn-wrapper">
+  <button class="stop-btn" id="stopButton1">🍴 Lunch</button>
+</div>
+
 
     <!-- bottom content (home screen) -->
 <div class="content-bottom" id="homeContent"> 
@@ -804,6 +841,29 @@ function runTimer() {
 // Start first timer
 runTimer();
 
+  const bgMusic = document.getElementById("bgMusic");
+const clickSound = document.getElementById("clickSound");
+let timerInterval;
+
+// Function to stop everything
+function stopAll() {
+  if (timerInterval) clearInterval(timerInterval);
+  bgMusic.pause();
+  bgMusic.currentTime = 0;
+}
+
+// Play short click sound
+function playClick() {
+  clickSound.currentTime = 0;
+  clickSound.play().catch(err => console.log(err));
+}
+
+// Button action
+document.getElementById("stopButton1").addEventListener("click", () => {
+  stopAll();
+  playClick();
+  console.log("Stop Button 1 (Lunch) clicked");
+});
 
 // Music toggle logic
 musicToggle.addEventListener('click', () => {

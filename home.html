@@ -3,6 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Neuw-Bloom</title>
   <meta name="theme-color" content="#0f172a" />
   <style>
     :root {
@@ -103,70 +104,24 @@
     .overlay-card button:hover {
       background: rgba(255,255,255,0.25);
     }
-/* Music Toggle Button */
-.music-toggle {
-  position: absolute;
-  top: 14px;
-  right: 14px;
-  z-index: 6;
-  width: 42px;   /* smaller size */
-  height: 42px;  /* smaller size */
-  border-radius: 50%;
-  border: 1px solid rgba(255,255,255,0.25);
-  background: rgba(255,255,255,0.12);
-  backdrop-filter: blur(14px) saturate(180%);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  font-size: 18px;   /* smaller icon size */
-  color: #fff;
-  box-shadow: 0 3px 10px rgba(0,0,0,0.25), inset 0 1px 2px rgba(255,255,255,0.2);
-  transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
-  overflow: hidden;
-  display: none; /* hidden until home */
-}
 
-/* Hover interaction */
-.music-toggle:hover {
-  transform: scale(1.08);
-  background: rgba(255,255,255,0.22);
-  box-shadow: 0 5px 14px rgba(0,0,0,0.3), inset 0 1px 3px rgba(255,255,255,0.3);
-}
-
-/* Active state (music ON) */
-.music-toggle.active {
-  background: rgba(255, 255, 255, 0.18); /* subtle white background */
-  border-color: rgba(255, 255, 255, 0.6);
-  transform: scale(1.05);
-}
-
-    /* Remove default mobile tap highlight */
-* {
-  -webkit-tap-highlight-color: transparent;
-  -webkit-touch-callout: none;
-}
-    
-.music-toggle {
-  -webkit-tap-highlight-color: transparent;
-  outline: none;
-}
-    /* Clock Widget */
-/* Analogue Clock Widget */
 /* Clock Widget Container */
 .clock-widget {
   position: absolute;
-  top: 95px;
+  top: 95px; /* space below music button */
   right: 14px;
-  width: 110px;
-  height: 110px;
+  width: 110px;   /* smaller */
+  height: 110px;  /* smaller */
   border-radius: 50%;
-  background: rgba(0,0,0,0.6);
+  background: rgba(0, 0, 0, 0.6); /* black glass */
   backdrop-filter: blur(14px) saturate(160%);
-  display: none; /* hidden until home */
+  display: flex;
+  align-items: center;
+  justify-content: center;
   z-index: 6;
-  box-shadow: 0 8px 20px rgba(0,0,0,0.5),
-              inset 0 1px 4px rgba(255,255,255,0.1);
+  display: none; /* hidden until home */
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.5),
+              inset 0 1px 4px rgba(255, 255, 255, 0.1);
 }
 
 /* Clock Face */
@@ -529,7 +484,55 @@
   background: rgba(255,255,255,0.85);
   box-shadow: 0 4px 8px rgba(0,0,0,0.25);
 }
-  </style> 
+/* Splash Overlay */
+  #splashOverlay {
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    background: linear-gradient(180deg, #1c1c3a, #071029);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 30px;
+    z-index: 10;
+    transition: opacity 0.6s ease;
+  }
+
+  #splashOverlay img {
+    width: 120px;
+    height: 120px;
+  }
+
+  #enterBtn {
+    padding: 16px 32px;
+    font-size: 18px;
+    font-weight: bold;
+    border-radius: 16px;
+    border: none;
+    cursor: pointer;
+    background: #fff;
+    color: #000;
+    box-shadow: 0 6px 12px rgba(0,0,0,0.3);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+  }
+  #enterBtn:active {
+    transform: translateY(3px);
+    box-shadow: 0 3px 6px rgba(0,0,0,0.3);
+  }
+
+  /* Existing Glass Content (hidden initially) */
+  .glass-content {
+    position: relative;
+    z-index: 1;
+    color: #fff;
+    font-size: 14px;
+    text-align: left;
+    padding: 12px;
+    display: none; /* hidden initially */
+  }
+
+  </style>
 </head>
 <body>
 </div>
@@ -540,25 +543,18 @@
     </video>
     <div class="back-overlay"></div>
 
-    <!-- background music -->
-    <audio id="bgMusic" src="Sound of a mountain river and the singing of birds. 10 minutes for meditation and relaxation..mp3" loop></audio>
-<button id="musicToggle">🎵</button>
 
-<!-- Home Content -->
-<div class="home-content" id="homeContent" style="display:none; position: relative;">
-  <!-- Music Toggle Button -->
-  <div id="musicToggle" style="display:none;">🎵</div>
-
-  <!-- Analogue Clock Widget -->
-  <div class="clock-widget" id="clockWidget">
-    <div class="clock-face">
-      <div class="hand hour" id="hourHand"></div>
-      <div class="hand minute" id="minuteHand"></div>
-      <div class="clock-dots"></div>
-    </div>
+    <!-- Analogue Clock Widget -->
+<!-- Analogue Clock Widget -->
+<div class="clock-widget" id="clockWidget">
+  <div class="clock-face">
+    <!-- Hour and Minute Hands -->
+    <div class="hand hour" id="hourHand"></div>
+    <div class="hand minute" id="minuteHand"></div>
+    <!-- Dotted ring generated via CSS -->
+    <div class="clock-dots"></div>
   </div>
 </div>
-
 
 <div class="welcome-note" id="welcomeNote">
   <div class="small-line">Welcome back , </div>
@@ -607,10 +603,17 @@
 
 <div class="glass-slide">
   <!-- Overlay -->
-  <div class="time-overlay" id="timeOverlay">
-    <button class="start-btn" onclick="startCare()">Start your care</button>
-  </div>
+<!-- Music audio element -->
+<audio id="backgroundMusic" loop>
+  <source src="Sound of a mountain river and the singing of birds. 10 minutes for meditation and relaxation..mp3" type="audio/mpeg">
+</audio>
 
+<!-- Overlay -->
+<div class="time-overlay" id="timeOverlay">
+  <button class="start-btn" onclick="startCare()">Start your care</button>
+</div>
+
+  
   <div class="glass-content" id="glassContent" style="display: none;">
     <div class="small-text">Next care begins at</div>
     <div class="timer" id="timer">40 mins more</div>
@@ -633,13 +636,17 @@
 
 <audio id="btnClickSound" src="computer-mouse-click-351398.mp3" preload="auto"></audio>
 
-    <!-- Music Toggle Button -->
-    <div class="music-toggle" id="musicToggle">🔇</div>
 
 
+
+    <!-- Desktop Only Overlay -->
+    <div class="overlay" id="desktopOverlay" style="display:none;">
+      <div class="overlay-card">
+      </div>
+    </div>
+  </div>
 
 <script>
-
   
   const installOverlay = document.getElementById('installOverlay');
   const successOverlay = document.getElementById('successOverlay');
@@ -650,7 +657,6 @@
   const musicToggle = document.getElementById('musicToggle');
   let deferredPrompt;
   let musicOn = false;
-  
 
   function isStandalone() {
     return window.matchMedia('(display-mode: standalone)').matches 
@@ -711,17 +717,29 @@
       });
     }
   });
+
+// Clock JS (updates every second)
+  const enterBtn = document.getElementById("enterBtn");
+  const splashOverlay = document.getElementById("splashOverlay");
+  const homeContent = document.getElementById("homeContent");
+  const bgMusic = document.getElementById("bgMusic");
+
+  enterBtn.addEventListener("click", () => {
+    // Fade out splash overlay
+    splashOverlay.style.opacity = "0";
+    setTimeout(() => {
+      splashOverlay.style.display = "none";
+      // Show home content
+      homeContent.style.display = "block";
+      // Play background music instantly
+      bgMusic.play().catch(err => console.log("Autoplay blocked:", err));
+    }, 600);
+  });
   
-
-// Get references
-const homeContent = document.getElementById("homeContent");
-const musicToggle = document.getElementById("musicToggle");
-const clockWidget = document.getElementById("clockWidget");
-
-// Analogue clock logic
+  // Analogue clock logic
 const hourHand = document.getElementById("hourHand");
 const minuteHand = document.getElementById("minuteHand");
-
+  
 function updateClock() {
   const now = new Date();
   const hour = now.getHours() % 12;
@@ -730,31 +748,20 @@ function updateClock() {
   const hourDeg = (hour + minute/60) * 30;  // 360/12 = 30
   const minuteDeg = minute * 6;             // 360/60 = 6
 
-  hourHand.style.transform = `translateX(-50%) rotate(${hourDeg}deg)`;
-  minuteHand.style.transform = `translateX(-50%) rotate(${minuteDeg}deg)`;
+  document.getElementById('hourHand').style.transform =
+    `translateX(-50%) rotate(${hourDeg}deg)`;
+  document.getElementById('minuteHand').style.transform =
+    `translateX(-50%) rotate(${minuteDeg}deg)`;
 }
 setInterval(updateClock, 1000);
-updateClock(); // initial update
+updateClock();
 
-// Show Home Page Function
+  // Show clock when home appears
 function showHome() {
-  homeContent.style.display = "block";       // show home content
-  musicToggle.style.display = "flex";        // show music toggle
-  clockWidget.style.display = "flex";        // show clock
+  homeContent.style.display = "block";
+  musicToggle.style.display = "flex";
+  clockWidget.style.display = "flex"; // 👈 show analogue clock
 }
-
-// Trigger showHome after entering the app
-enterBtn.addEventListener('click', () => {
-  // If using separate home.html, navigate:
-  // window.location.href = 'home.html';
-
-  // If same page:
-  showHome();
-
-  // Optionally hide splash page
-  document.querySelector('.splash-content').style.display = 'none';
-});
-
   
  function showHome() {
   homeContent.style.display = "block";
@@ -786,6 +793,13 @@ cycleGlyphs();
 setInterval(cycleGlyphs, 3000); // change every 3s
 
 function startCare() {
+
+    const music = document.getElementById('backgroundMusic');
+  
+  // Play music
+    music.play().catch(err => {
+    console.log("Autoplay blocked, user interaction required.", err);
+    });
     // Hide overlay
     document.getElementById("timeOverlay").style.display = "none";
     // Show content
@@ -867,56 +881,17 @@ buttons.forEach(btn => {
   });
 });
 
-const params = new URLSearchParams(window.location.search);
-if(params.get("music") === "1"){
-  document.getElementById("bgMusic").play();
-}
-
-
-
 // Music toggle logic
-musicToggle.addEventListener('click', () => {
-  if (!musicOn) {
-    bgMusic.play().then(() => {
-      musicOn = true;
-      musicToggle.textContent = "🎵";
-      musicToggle.classList.add("active"); // glow effect
-    }).catch(err => console.log("Play error:", err));
-  } else {
-    bgMusic.pause();
-    musicOn = false;
-    musicToggle.textContent = "🔇";
-    musicToggle.classList.remove("active");
-  }
-});
+
 
 
   showCorrectUI();
 
-</script>
-    <script>
-const bgMusic = document.getElementById('bgMusic');
-const musicToggle = document.getElementById('musicToggle');
-let musicOn = false;
-
-// Check cookie if user already played music
-if(document.cookie.includes("appInstalled=true")){
-  bgMusic.play().then(()=>{ musicOn=true; }).catch(err=>console.log(err));
-}
-
-// Toggle logic
-musicToggle.addEventListener('click', ()=>{
-  if(!musicOn){
-    bgMusic.play().then(()=>{
-      musicOn=true;
-      musicToggle.textContent="🎵";
-    }).catch(err=>console.log(err));
-  } else {
-    bgMusic.pause();
-    musicOn=false;
-    musicToggle.textContent="🔇";
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('sw.js').then(() => {
+      console.log('Service Worker registered');
+    });
   }
-});
 </script>
 </body>
 </html>

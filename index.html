@@ -501,14 +501,12 @@
   height: 60px;
   border-radius: 50%;
   font-size: 26px;
-  color: #fff;  /* default white */
-  background: rgba(255,255,255,0.12);
-  border: 1px solid rgba(255,255,255,0.25);
-  backdrop-filter: blur(12px) saturate(180%);
-  -webkit-backdrop-filter: blur(12px) saturate(180%);
+  color: #000;              /* icon black by default */
+  background: #fff;         /* solid white background */
+  border: 1px solid rgba(0,0,0,0.15);
   cursor: pointer;
-  box-shadow: 0 6px 12px rgba(0,0,0,0.3),
-              inset 0 1px 2px rgba(255,255,255,0.2);
+  box-shadow: 0 6px 12px rgba(0,0,0,0.2),
+              inset 0 1px 2px rgba(255,255,255,0.4);
   transition: all 0.25s ease-in-out;
   display: flex;
   align-items: center;
@@ -516,16 +514,23 @@
 }
 
 .glass-round-btn:hover {
-  background: rgba(255,255,255,0.2);
+  background: #f0f0f0;      /* slight grey hover */
 }
 
 .glass-round-btn:active {
   transform: scale(0.9);
 }
 
+/* Optional: toggled active state */
+.glass-round-btn.active {
+  background: #000;   /* background turns black */
+  color: #fff;        /* icon turns white */
+}
+
+
 /* Toggled (clicked) state → Black */
 .glass-round-btn.active {
-  color: #000;
+  color: #0000;
   background: rgba(255,255,255,0.85);
   box-shadow: 0 4px 8px rgba(0,0,0,0.25);
 }

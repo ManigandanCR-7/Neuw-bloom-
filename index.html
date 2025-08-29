@@ -456,12 +456,24 @@
   font-size: 10px;
   margin-top: 12px;
   opacity: 0.9;
+  white-space: nowrap;       /* keep it single line */
+  display: inline-block;
+  overflow: hidden;
+  padding-left: 100%;        /* start from right */
+  animation: ticker 15s linear infinite, twinkle 2s infinite alternate;
 }
 
-.twinkle {
-  animation: twinkle 2s infinite alternate;
+/* Ticker animation (right → left) */
+@keyframes ticker {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-100%);
+  }
 }
 
+/* Twinkle animation */
 @keyframes twinkle {
   0%   { opacity: 0.6; }
   50%  { opacity: 1;   }

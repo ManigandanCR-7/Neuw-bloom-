@@ -426,12 +426,24 @@
   width: 100%;
   height: 100%;
   object-fit: cover;
-  opacity: 0.55; /* more transparent for blending */
+  opacity: 0.25; /* black-transparent look */
   border-radius: 24px;
-  mix-blend-mode: screen; /* try 'overlay', 'soft-light', or 'multiply' depending on effect */
-  filter: brightness(0.9) contrast(1.1); /* optional polish */
+  filter: brightness(0.5) contrast(1); /* darkens image while keeping details */
 }
 
+.glass-slide {
+  position: relative;
+  overflow: hidden;
+  border-radius: 24px;
+}
+
+.glass-slide::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: rgba(0,0,0,0.45); /* black overlay for more darkness */
+  pointer-events: none;
+}
 
 
   </style>
@@ -519,7 +531,7 @@
 </div>
 
     <!-- Music Toggle Button -->
-    <div class="music-toggle" id="musicToggle">🔇</div>
+    <div class="music-toggle" id="musicToggle">🎵</div>
 
     <!-- Install Overlay (Step 1) -->
     <div class="overlay" id="installOverlay">

@@ -193,111 +193,85 @@ body {
 <script>
 const installOverlay = document.getElementById('installOverlay');
 const successOverlay = document.getElementById('successOverlay');
-const installBtn = document.getElementById('installBtn');
 const desktopOverlay = document.getElementById('desktopOverlay');
+const installBtn = document.getElementById('installBtn');
 const enterBtn = document.getElementById('enterBtn');
 
 let deferredPrompt;
+
+// Helper: Set/Get Cookie
+function setCookie(name, value, days) {
+  const date = new Date();
+  date.setTime(date.getTime() + (days*24*60*60*1000));
+  document.cookie = name + "=" + value + "; expires=" + date.toUTCString() + "; path=/";
+}
+
+function getCookie(name) {
+  const match = document.cookie.match(new RegExp('(^| )' + name + '=([^;]+)'));
+  return match ? match[2] : null;
+}
+
+// Check Mobile
+function isMobile() {
+  return /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+}
 
 // Check if app is standalone
 function isStandalone() {
   return window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true;
 }
 
-// Check if mobile
-function isMobile() {
-  return /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+// Show splash page immediately
+function showSplashPage() {
+  installOverlay.style.display = "none";
+  desktopOverlay.style.display = "none";
+  successOverlay.style.display = "none";
 }
 
-// Show correct overlay
-function showCorrectUI() {
+// Show “installed” message briefly
+function showInstalledMessage() {
+  successOverlay.style.display = "flex";
+  setTimeout(() => {
+    successOverlay.style.display = "none";
+  }, 4000); // show 4 seconds
+}
+
+// On page load
+window.addEventListener('load', () => {
+  // Desktop users
   if(!isMobile()){
-    desktopOverlay.style.display="flex";
-    installOverlay.style.display="none";
-    successOverlay.style.display="none";
+    desktopOverlay.style.display = "flex";
+    installOverlay.style.display = "none";
     return;
   }
-  desktopOverlay.style.display="none";
-  if(isStandalone()){
-    installOverlay.style.display="none";
-    successOverlay.style.display="none";
+
+  // Mobile PWA users
+  if(getCookie("pwa_installed") === "true" || isStandalone()){
+    showSplashPage(); // immediately show icon page
+    if(!isStandalone()) showInstalledMessage(); // if just installed via website
   } else {
-    installOverlay.style.display="flex";
+    installOverlay.style.display = "flex"; // show install overlay
   }
-}
+});
 
 // Before install prompt
 window.addEventListener('beforeinstallprompt', (e) => {
   e.preventDefault();
   deferredPrompt = e;
-  showCorrectUI();
 });
-
-// Helper: Set cookie
-function setCookie(name, value, days) {
-  let expires = "";
-  if (days) {
-    const date = new Date();
-    date.setTime(date.getTime() + days*24*60*60*1000);
-    expires = "; expires=" + date.toUTCString();
-  }
-  document.cookie = name + "=" + (value || "") + expires + "; path=/";
-}
-
-// Helper: Get cookie
-function getCookie(name) {
-  const nameEQ = name + "=";
-  const ca = document.cookie.split(';');
-  for(let i=0;i<ca.length;i++) {
-    let c = ca[i];
-    while (c.charAt(0)==' ') c = c.substring(1,c.length);
-    if (c.indexOf(nameEQ) == 0) return c.substring(nameEQ.length,c.length);
-  }
-  return null;
-}
-
-// Show splash after successful install or if cookie exists
-function showSplashAfterInstall() {
-  // Hide install overlay
-  installOverlay.style.display = "none";
-  // Show success overlay briefly
-  successOverlay.style.display = "flex";
-
-  // Fade out success overlay in 10s
-  setTimeout(() => {
-    successOverlay.style.display = "none";
-    // Splash page (icon + click to enter) is already visible
-  }, 10000); 
-
-  // Remember that user installed app
-  setCookie("pwa_installed", "true", 365);
-}
-
-// Check if user already installed
-function checkInstalledCookie() {
-  if (getCookie("pwa_installed") === "true") {
-    installOverlay.style.display = "none";
-    successOverlay.style.display = "none";
-    // Splash page remains visible
-  }
-}
 
 // Install button
-installBtn.addEventListener('click', () => {
-  if (deferredPrompt) {
+installBtn.addEventListener('click', async () => {
+  if(deferredPrompt){
     deferredPrompt.prompt();
-    deferredPrompt.userChoice.then(choice => {
-      if (choice.outcome === 'accepted') {
-        showSplashAfterInstall();
-      }
-      deferredPrompt = null;
-    });
+    const choice = await deferredPrompt.userChoice;
+    if(choice.outcome === 'accepted'){
+      setCookie("pwa_installed", "true", 365);
+      showSplashPage();
+      showInstalledMessage();
+    }
+    deferredPrompt = null;
   }
-});
-
-// Run on page load
-window.addEventListener("load", () => {
-  checkInstalledCookie();
 });
 
 // Enter button
@@ -305,7 +279,7 @@ enterBtn.addEventListener('click', () => {
   window.location.href = 'home.html';
 });
 
-// Register service worker
+// Register Service Worker
 if('serviceWorker' in navigator){
   navigator.serviceWorker.register('sw.js').then(()=>console.log('Service Worker registered'));
 }

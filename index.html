@@ -605,7 +605,7 @@
   <!-- Actual Content -->
   <div class="glass-content" id="glassContent" style="display:none;">
     <div class="small-text">Next care begins at</div>
-    <div class="timer" id="timer">40 mins </div>
+    <div class="timer" id="timer">2 mins </div>
     <div class="quote twinkle">* work * meditate * sip water * walk 10 mins *</div>
   </div>
 </div>
@@ -790,9 +790,9 @@ function startCare() {
 
 
 let timers = [
-  { duration: 40 * 60 }, // 40 mins
-  { duration: 10 * 60 }, // 10 mins after 1st
-  { duration: 20 * 60 }  // example 20 mins for 3rd
+  { duration: 2 * 60 }, // 40 mins
+  { duration: 2 * 60 }, // 10 mins after 1st
+  { duration: 2 * 60 }  // example 20 mins for 3rd
 ];
 
 let currentTimer = 0;
@@ -803,9 +803,9 @@ function updateTimer() {
   let minutes = Math.floor(timeLeft / 60);
   // Handle plural/singular minute
   if (minutes === 1) {
-    timerEl.textContent = `${minutes} min more`;
+    timerEl.textContent = `${minutes} min `;
   } else {
-    timerEl.textContent = `${minutes} mins more`;
+    timerEl.textContent = `${minutes} mins `;
   }
 }
 

@@ -453,7 +453,8 @@
 
 /* Quote line with twinkle animation */
 .quote {
-  font-size: 10px;
+  font-size: 13px;
+  font-style: italic;
   margin-top: 12px;
   opacity: 0.9;
   white-space: nowrap;       /* keep it single line */
@@ -473,12 +474,7 @@
   }
 }
 
-/* Twinkle animation */
-@keyframes twinkle {
-  0%   { opacity: 0.6; }
-  50%  { opacity: 1;   }
-  100% { opacity: 0.6; }
-}
+
 
   </style>
 </head>
@@ -557,7 +553,7 @@
 <div class="glass-slide">
   <div class="glass-content">
     <div class="small-text">Next care begins at</div>
-    <div class="timer" id="timer">40:00</div>
+    <div class="timer" id="timer">40 mins more</div>
     <div class="quote twinkle">* work * meditate * sip water * walk 10 mins *</div>
   </div>
 </div>
@@ -728,7 +724,7 @@ setInterval(cycleGlyphs, 3000); // change every 3s
 let timers = [
   { duration: 40 * 60 }, // 40 mins
   { duration: 10 * 60 }, // 10 mins after 1st
-  { duration: 20 * 60 }  // example 20 mins for 3rd (change as you like)
+  { duration: 20 * 60 }  // example 20 mins for 3rd
 ];
 
 let currentTimer = 0;
@@ -737,8 +733,12 @@ const timerEl = document.getElementById("timer");
 
 function updateTimer() {
   let minutes = Math.floor(timeLeft / 60);
-  let seconds = timeLeft % 60;
-  timerEl.textContent = `${minutes}:${seconds < 10 ? "0" : ""}${seconds}`;
+  // Handle plural/singular minute
+  if (minutes === 1) {
+    timerEl.textContent = `${minutes} min more`;
+  } else {
+    timerEl.textContent = `${minutes} mins more`;
+  }
 }
 
 function runTimer() {
@@ -746,7 +746,10 @@ function runTimer() {
   let interval = setInterval(() => {
     if (timeLeft > 0) {
       timeLeft--;
-      updateTimer();
+      // Only update text when a full minute decreases
+      if (timeLeft % 60 === 0) {
+        updateTimer();
+      }
     } else {
       clearInterval(interval);
       currentTimer++;

@@ -55,12 +55,16 @@ or run a simple server:
 
 
 
+
+
 2. Mobile Installation (PWA)
 Open index.html on your mobile browser
 
 Tap “Add to Home Screen”
 
 The app installs and behaves like a native mobile app
+
+
 
 
 
@@ -76,12 +80,16 @@ The repository includes music, videos, and other assets to create an immersive, 
 
 
 
+
+
 4. 🛠️ Tech Stack
 HTML5, CSS3, JavaScript (Vanilla)
 
 Progressive Web App (PWA) support: manifest.json, service-worker.js, app icons
 
 Mobile-first responsive design
+
+
 
 
 
@@ -95,6 +103,8 @@ This project is licensed under the MIT License – feel free to use, modify, and
 
 🤝 Contributing
 Contributions, ideas, and feedback are welcome!
+
+
 
 
 

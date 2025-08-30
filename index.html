@@ -812,90 +812,102 @@ function cycleGlyphs() {
 cycleGlyphs();
 setInterval(cycleGlyphs, 3000); // change every 3s
 
-function startCare() {
-
-    const music = document.getElementById("bgMusic");
-
-  // Play the music in a loop
-    music.play().catch(err => {
-    console.log("Playback failed:", err);
-    });
-    // Hide overlay
-    document.getElementById("timeOverlay").style.display = "none";
-    // Show content
-    document.getElementById("glassContent").style.display = "block";
-
-    // Play sound instantly
-    let sound = document.getElementById("startSound");
-    sound.currentTime = 0; // reset to start
-    sound.play().catch(err => console.log("Audio blocked until user interaction:", err));
-
-    // (Timer logic can continue here if needed…)
-  }
-
-let timers = [
-  { duration: 2 * 60 }, // 1st: 2 mins (example)
-  { duration: 2 * 60 }, // 2nd: 2 mins
-  { duration: 2 * 60 }  // 3rd: 2 mins
-];
-
-let currentTimer = 0;
-let timeLeft = timers[currentTimer].duration;
+// Background music reference
+const music = document.getElementById("bgMusic");
 const timerEl = document.getElementById("timer");
+
+// Track global interval
 let interval = null;
 
-function updateTimer() {
-  let minutes = Math.floor(timeLeft / 60);
-  timerEl.textContent = (minutes === 1) ? `${minutes} min` : `${minutes} mins`;
-}
+// 👉 Start care
+function startCare() {
+  // Reset everything before starting
+  if (interval) clearInterval(interval);
 
-// 🔔 Play different sound based on timer index
-function playCompletionSound(timerIndex, callback) {
-  let soundId = `sound${timerIndex + 1}`; // sound1, sound2, sound3
-  let sound = document.getElementById(soundId);
+  let timers = [
+    { duration: 2 * 60 }, // 1st: 2 mins
+    { duration: 2 * 60 }, // 2nd: 2 mins
+    { duration: 2 * 60 }  // 3rd: 2 mins
+  ];
+  let currentTimer = 0;
+  let timeLeft = timers[currentTimer].duration;
 
-  if (sound) {
-    sound.currentTime = 0;
-    sound.play().then(() => {
-      if (callback) {
-        sound.onended = callback;
-      }
-    }).catch(err => console.log("Sound play blocked:", err));
-  } else {
-    if (callback) callback(); // fallback if sound not found
+  // Play background music
+  music.currentTime = 0;
+  music.play().catch(err => console.log("Playback failed:", err));
+
+  // Hide overlay / show content
+  document.getElementById("timeOverlay").style.display = "none";
+  document.getElementById("glassContent").style.display = "block";
+
+  // Play start sound once
+  let sound = document.getElementById("startSound");
+  sound.currentTime = 0;
+  sound.play().catch(err => console.log("Audio blocked:", err));
+
+  // Helper: update timer text
+  function updateTimer() {
+    let minutes = Math.floor(timeLeft / 60);
+    timerEl.textContent = (minutes === 1) ? `${minutes} min` : `${minutes} mins`;
   }
-}
 
-function runTimer() {
-  updateTimer();
+  // Helper: play sound when a timer finishes
+  function playCompletionSound(timerIndex, callback) {
+    let soundId = `sound${timerIndex + 1}`; // sound1, sound2, sound3
+    let sound = document.getElementById(soundId);
 
-  interval = setInterval(() => {
-    if (timeLeft > 0) {
-      timeLeft--;
-
-      // Update every full minute
-      if (timeLeft % 60 === 0) {
-        updateTimer();
-      }
+    if (sound) {
+      sound.currentTime = 0;
+      sound.play().then(() => {
+        if (callback) sound.onended = callback;
+      }).catch(err => console.log("Sound play blocked:", err));
     } else {
-      clearInterval(interval);
-
-      // 🔥 Play different sound for each timer
-      playCompletionSound(currentTimer, () => {
-        currentTimer++;
-        if (currentTimer < timers.length) {
-          timeLeft = timers[currentTimer].duration;
-          runTimer();
-        } else {
-          timerEl.textContent = "✅ Done";
-        }
-      });
+      if (callback) callback();
     }
-  }, 1000);
+  }
+
+  // Main: run timers
+  function runTimer() {
+    updateTimer();
+
+    interval = setInterval(() => {
+      if (timeLeft > 0) {
+        timeLeft--;
+
+        if (timeLeft % 60 === 0) {
+          updateTimer();
+        }
+      } else {
+        clearInterval(interval);
+
+        playCompletionSound(currentTimer, () => {
+          currentTimer++;
+          if (currentTimer < timers.length) {
+            timeLeft = timers[currentTimer].duration;
+            runTimer();
+          } else {
+            timerEl.textContent = "✅ Done";
+          }
+        });
+      }
+    }, 1000);
+  }
+
+  // 🚀 Start first timer
+  runTimer();
 }
 
-runTimer();
-  
+// 🔴 Stop everything (used for glass buttons)
+function stopAllCare() {
+  if (interval) {
+    clearInterval(interval);
+    interval = null;
+  }
+  music.pause();
+  music.currentTime = 0;
+  timerEl.textContent = "⏹️ Stopped";
+}
+
   // Add toggle effect
 document.querySelectorAll(".glass-round-btn").forEach(btn => {
   btn.addEventListener("click", () => {

@@ -625,6 +625,10 @@
   <div class="time-overlay" id="timeOverlay">
     <button class="start-btn" onclick="startCare()">Start your care</button>
   </div>
+  
+<audio id="sound1" src="tsar-bell-sound-simulation-292699.mp3"></audio>
+<audio id="sound2" src="water-drop-85731.mp3"></audio>
+<audio id="sound3" src="walk-264962.mp3"></audio>
 
   <div class="glass-content" id="glassContent" style="display: none;">
     <div class="small-text">Next care begins at</div>
@@ -830,50 +834,68 @@ function startCare() {
   }
 
 let timers = [
-  { duration: 40 * 60 }, // 40 mins
-  { duration: 10 * 60 }, // 10 mins after 1st
-  { duration: 10* 60 }  // example 20 mins for 3rd
+  { duration: 2 * 60 }, // 1st: 2 mins (example)
+  { duration: 2 * 60 }, // 2nd: 2 mins
+  { duration: 2 * 60 }  // 3rd: 2 mins
 ];
 
 let currentTimer = 0;
 let timeLeft = timers[currentTimer].duration;
 const timerEl = document.getElementById("timer");
+let interval = null;
 
 function updateTimer() {
   let minutes = Math.floor(timeLeft / 60);
-  // Handle plural/singular minute
-  if (minutes === 1) {
-    timerEl.textContent = `${minutes} min `;
+  timerEl.textContent = (minutes === 1) ? `${minutes} min` : `${minutes} mins`;
+}
+
+// 🔔 Play different sound based on timer index
+function playCompletionSound(timerIndex, callback) {
+  let soundId = `sound${timerIndex + 1}`; // sound1, sound2, sound3
+  let sound = document.getElementById(soundId);
+
+  if (sound) {
+    sound.currentTime = 0;
+    sound.play().then(() => {
+      if (callback) {
+        sound.onended = callback;
+      }
+    }).catch(err => console.log("Sound play blocked:", err));
   } else {
-    timerEl.textContent = `${minutes} mins `;
+    if (callback) callback(); // fallback if sound not found
   }
 }
 
 function runTimer() {
   updateTimer();
-  let interval = setInterval(() => {
+
+  interval = setInterval(() => {
     if (timeLeft > 0) {
       timeLeft--;
-      // Only update text when a full minute decreases
+
+      // Update every full minute
       if (timeLeft % 60 === 0) {
         updateTimer();
       }
     } else {
       clearInterval(interval);
-      currentTimer++;
-      if (currentTimer < timers.length) {
-        timeLeft = timers[currentTimer].duration;
-        runTimer();
-      } else {
-        timerEl.textContent = "✅ Done";
-      }
+
+      // 🔥 Play different sound for each timer
+      playCompletionSound(currentTimer, () => {
+        currentTimer++;
+        if (currentTimer < timers.length) {
+          timeLeft = timers[currentTimer].duration;
+          runTimer();
+        } else {
+          timerEl.textContent = "✅ Done";
+        }
+      });
     }
   }, 1000);
 }
 
-// Start first timer
 runTimer();
-
+  
   // Add toggle effect
 document.querySelectorAll(".glass-round-btn").forEach(btn => {
   btn.addEventListener("click", () => {

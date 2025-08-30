@@ -23,8 +23,7 @@ neuw-bloom/
 ├── new.html # Health Timer mobile UI
 
 
-├── manifest.json # PWA manifest configuration
-├── service-worker.js # Service worker for offline support & caching
+├── manifest.json # PWA manifest configuration├── service-worker.js # Service worker for offline support & caching
 
 
 ├── /assets/ # Music, videos, images, and supporting files

@@ -21,10 +21,12 @@ neuw-bloom/
 ├── index.html # Main landing page (UI with clock, notes, timer, navigation)
 ├── soul.html # Soul Chemistry tracker prototype
 ├── new.html # Health Timer mobile UI
-│
+
+
 ├── manifest.json # PWA manifest configuration
 ├── service-worker.js # Service worker for offline support & caching
-│
+
+
 ├── /assets/ # Music, videos, images, and supporting files
 ├── /css/ # Stylesheets for UI design
 ├── /js/ # JavaScript for timers, navigation, and app logic

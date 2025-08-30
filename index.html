@@ -352,6 +352,18 @@
   transform: translateX(-50%);
   text-align: center;
 }
+
+.soul-link {
+  display: inline-block;
+  text-decoration: none; /* remove underline */
+  color: inherit;        /* keep original text color */
+}
+
+.soul-link:active .soul-chemistry {
+  transform: scale(0.98); /* small click feedback */
+  transition: 0.2s ease;
+}
+
     /* Glyph Matrix Container */
 .glyph-matrix {
   position: absolute;
@@ -567,32 +579,36 @@
   </div>
 </div>
 
-<div class="soul-chemistry" id="soulChemistry">
-  <div class="tube-wrapper">
-    <!-- Tube 1 -->
-    <div class="tube-container">
-      <div class="tube">
-        <div class="liquid" style="height:20%; background: #8e44ad;"></div>
+<!-- Wrapper link -->
+<a href="soul.html" class="soul-link">
+  <div class="soul-chemistry" id="soulChemistry">
+    <div class="tube-wrapper">
+      <!-- Tube 1 -->
+      <div class="tube-container">
+        <div class="tube">
+          <div class="liquid" style="height:20%; background:#8e44ad;"></div>
+        </div>
+        <div class="tube-label">D</div>
       </div>
-      <div class="tube-label">D</div>
-    </div>
-    <!-- Tube 2 -->
-    <div class="tube-container">
-      <div class="tube">
-        <div class="liquid" style="height:40%; background: #27ae60;"></div>
+      <!-- Tube 2 -->
+      <div class="tube-container">
+        <div class="tube">
+          <div class="liquid" style="height:40%; background:#27ae60;"></div>
+        </div>
+        <div class="tube-label">S</div>
       </div>
-      <div class="tube-label">S</div>
+      <!-- Tube 3 -->
+      <div class="tube-container">
+        <div class="tube">
+          <div class="liquid" style="height:60%; background:#00cfff;"></div>
+        </div>
+        <div class="tube-label">O</div>
+      </div>
     </div>
-    <!-- Tube 3 -->
-    <div class="tube-container">
-  <div class="tube">
-    <div class="liquid" style="height:60%; background: #00cfff;"></div>
+    <div class="statement">Soul Chemistry</div>
   </div>
-  <div class="tube-label">O</div>
-</div>
-  </div>
-  <div class="statement">Soul Chemistry</div>
-</div>
+</a>
+
 
 <div class="glyph-wrapper">
   <div class="glyph-matrix" id="glyphMatrix">

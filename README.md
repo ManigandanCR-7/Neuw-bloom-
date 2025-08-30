@@ -17,6 +17,8 @@ It encourages balance between **mind, body, and “soul-chemistry”** with gent
 
 ## 📂 Project Structure
 neuw-bloom/
+
+
 ├── index.html # Main landing page (UI with clock, notes, timer, navigation)
 
 ├── soul.html # Soul Chemistry tracker prototype
@@ -29,9 +31,12 @@ neuw-bloom/
 ├── service-worker.js # Service worker for offline support & caching
 
 
-├── /assets/ # Music, videos, images, and supporting files
+├── files # Music, videos, images, and supporting files
+
 ├── /css/ # Stylesheets for UI design
+
 ├── /js/ # JavaScript for timers, navigation, and app logic
+
 └── /icons/ # App icons for PWA installation
 
 

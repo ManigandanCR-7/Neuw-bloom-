@@ -908,6 +908,24 @@ function stopAllCare() {
   timerEl.textContent = "⏹️ Stopped";
 }
 
+// 🔘 Glass button logic
+const buttons = document.querySelectorAll('.glass-round-btn');
+const clickSound = document.getElementById('btnClickSound');
+
+buttons.forEach(btn => {
+  btn.addEventListener('click', () => {
+    // Play click sound
+    clickSound.currentTime = 0;
+    clickSound.play();
+
+    // Toggle visual active state
+    btn.classList.toggle('active');
+
+    // Stop timers + music
+    stopAllCare();
+  });
+});
+
   // Add toggle effect
 document.querySelectorAll(".glass-round-btn").forEach(btn => {
   btn.addEventListener("click", () => {

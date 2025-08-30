@@ -17,12 +17,14 @@ It encourages balance between **mind, body, and “soul-chemistry”** with gent
 
 ## 📂 Project Structure
 neuw-bloom/
-
+│
 ├── index.html # Main landing page (UI with clock, notes, timer, navigation)
 ├── soul.html # Soul Chemistry tracker prototype
 ├── new.html # Health Timer mobile UI
+│
 ├── manifest.json # PWA manifest configuration
 ├── service-worker.js # Service worker for offline support & caching
+│
 ├── /assets/ # Music, videos, images, and supporting files
 ├── /css/ # Stylesheets for UI design
 ├── /js/ # JavaScript for timers, navigation, and app logic
@@ -35,7 +37,6 @@ neuw-bloom/
 ## 🚀 Installation & Usage
 
 ### Run Locally
-
 1. Clone the repo  
    ```bash
    git clone https://github.com/yourusername/neuw-bloom.git
@@ -45,8 +46,7 @@ or run a simple server:
 
 
 
-
-2 . Mobile Installation (PWA)
+2. Mobile Installation (PWA)
 Open index.html on your mobile browser
 
 Tap “Add to Home Screen”
@@ -67,7 +67,7 @@ The repository includes music, videos, and other assets to create an immersive, 
 
 
 
-3 . 🛠️ Tech Stack
+4. 🛠️ Tech Stack
 HTML5, CSS3, JavaScript (Vanilla)
 
 Progressive Web App (PWA) support: manifest.json, service-worker.js, app icons
@@ -76,17 +76,17 @@ Mobile-first responsive design
 
 
 
-4. 🌟 Vision
+
+5. 🌟 Vision
 neuw-bloom is more than a reminder app—it’s a digital companion for mindful living.
 It combines productivity, self-care, and nature-inspired design to help you bloom into a healthier version of yourself. 🌸
 
-
-5.📜 License
+📜 License
 This project is licensed under the MIT License – feel free to use, modify, and share.
 
+🤝 Contributing
+Contributions, ideas, and feedback are welcome!
 
-6. 🤝 Contributing
-Contributions, ideas, and feedback are welcome
 
 
 ---
